@@ -10,6 +10,8 @@ function MessageDetail() {
   const [message, setMessage] = useState([]);
   const [messages, setMessages] = useState([]);
 
+  const [newMessage, setNewMessage] = useState({ message: "" });
+
   const { id } = useParams();
   const token = localStorage.getItem("authTokens");
   const decoded = jwtDecode(token);
@@ -22,6 +24,7 @@ function MessageDetail() {
     try {
       axios.get(url)
         .then((res) => {
+          document.getElementById("text-input").value = "";
           setMessages(res.data);
         }).catch((err) => {
         })
@@ -29,6 +32,7 @@ function MessageDetail() {
     }
   }, []);
 
+  // NOTE: This is a quite expensive operation for a server 🤔
   useEffect(() => {
     let interval = setInterval(() => {
 
@@ -39,11 +43,46 @@ function MessageDetail() {
       } catch (error) {
 
       }
-    }, 2000);
+    }, 99999);
     return () => {
       clearInterval(interval);
     }
   }, []);
+
+  // NOTE: Capture changes made by the user in those fields and update the component's state accordingly
+  const handleNewMessage = (event) => {
+    setNewMessage({
+      ...newMessage,
+      [event.target.name]: event.target.value
+    })
+  }
+
+  const SendMessage = () => {
+    const formData = new FormData();
+    formData.append("user", user_id);
+    formData.append("sender", user_id);
+    formData.append("receiver", id);
+    formData.append("message", newMessage.message);
+    formData.append("is_read", false);
+
+    try {
+      axios.post(`${baseURL}/get-messages/`, formData).then((res) => {
+        console.log(res.data);
+        setNewMessage({ message: "" });
+        axios.get(`${baseURL}/get-messages/${user_id}/${id}/`).then((res) => {
+          setMessages(res.data);
+        }).catch((err) => { })
+        // window.location.reload();
+      }).catch((err) => {
+        console.log(err);
+      });
+
+    } catch (error) {
+      console.log(error);
+
+    }
+  }
+
 
   return (
     <main className="content" style={{ marginTop: "150px" }}>
@@ -220,8 +259,12 @@ function MessageDetail() {
                     type="text"
                     className="form-control"
                     placeholder="Type your message"
+                    name="message"
+                    value={newMessage.message}
+                    onChange={handleNewMessage}
+                    id="text-input"
                   />
-                  <button className="btn btn-primary">Send</button>
+                  <button className="btn btn-primary" onClick={SendMessage}>Send</button>
                 </div>
               </div>
             </div>
