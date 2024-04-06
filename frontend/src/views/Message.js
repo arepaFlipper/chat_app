@@ -51,9 +51,9 @@ function Message() {
                 </div>
               </div>
 
-              {messages.map((message) => {
+              {messages.map((message, idx) => {
                 return (
-                  <Link to={`/inbox/${message.sender}`} key={message.id} href="#" className="list-group-item list-group-item-action border-0" >
+                  <Link to={`/inbox/${message.sender}`} key={idx} href="#" className="list-group-item list-group-item-action border-0" >
                     <div className="badge bg-success float-right text-white">
                       {moment.utc(message.date).local().startOf('seconds').fromNow()}
                     </div>
