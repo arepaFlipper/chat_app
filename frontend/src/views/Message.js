@@ -58,14 +58,14 @@ function Message() {
                     </div>
                     <div className="d-flex align-items-start">
                       {message.sender.id !== user_id && (
-                        <img src={message.sender_profile.image} style={{ objectFit: "cover" }} className="rounded-circle mr-1" alt={message.sender_profile.full_name} width={40} height={40} />
+                        <img src={message.receiver_profile.image} style={{ objectFit: "cover" }} className="rounded-circle mr-1" alt={message.sender_profile.full_name} width={40} height={40} />
                       )}
                       {message.sender.id === user_id && (
-                        <img src={message.receiver_profile.image} className="rounded-circle mr-1" alt="Sharon Lessman" width={40} height={40} />
+                        <img src={message.sender_profile.image} className="rounded-circle mr-1" alt="Sharon Lessman" width={40} height={40} />
                       )}
                       <div className="flex-grow-1 ml-3">
-                        {(message.sender.id !== user_id) && (<h6 className="mb-1">{message.sender_profile.username}</h6>)}
-                        {(message.sender.id === user_id) && (<h6 className="mb-1">{message.receiver_profile.username}</h6>)}
+                        {(message.sender.id !== user_id) && (<h6 className="mb-1">{message.receiver_profile.username}</h6>)}
+                        {(message.sender.id === user_id) && (<h6 className="mb-1">{message.sender_profile.username}</h6>)}
                         <div className="small">
                           <span className="fas fa-circle chat-online" /> {message.message}
                         </div>
