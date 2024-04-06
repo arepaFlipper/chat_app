@@ -11,6 +11,7 @@ import Dashboard from './views/Dashboard'
 import Navbar from './views/Navbar'
 import Todo from './views/Todo'
 import Message from './views/Message'
+import MessageDetail from './views/MessageDetail'
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
         <Switch>
           <PrivateRoute component={Dashboard} path="/dashboard" exact />
           <PrivateRoute component={Message} path="/inbox" exact />
+          <PrivateRoute component={MessageDetail} path="/inbox/:id" exact />
           <Route component={Loginpage} path="/login" />
           <Route component={Registerpage} path="/register" exact />
           <Route component={Homepage} path="/" exact />

@@ -3,6 +3,7 @@ import "./style/Message.css";
 import useAxios from "../utils/useAxios";
 import jwtDecode from "jwt-decode";
 import moment from "moment";
+import { Link } from "react-router-dom";
 
 function Message() {
   // NOTE: Define base api url
@@ -52,7 +53,7 @@ function Message() {
 
               {messages.map((message) => {
                 return (
-                  <a key={message.id} href="#" className="list-group-item list-group-item-action border-0" >
+                  <Link to={`/inbox/${message.sender}`} key={message.id} href="#" className="list-group-item list-group-item-action border-0" >
                     <div className="badge bg-success float-right text-white">
                       {moment.utc(message.date).local().startOf('seconds').fromNow()}
                     </div>
@@ -71,7 +72,7 @@ function Message() {
                         </div>
                       </div>
                     </div>
-                  </a>
+                  </Link>
                 )
               })}
 
