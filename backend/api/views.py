@@ -134,3 +134,24 @@ class ProfileDetail(generics.RetrieveUpdateAPIView):
     serializer_class = ProfileSerializer
     queryset = Profile.objects.all()
     permission_classes = [IsAuthenticated]
+
+class SearchUser(generics.ListAPIView):
+    serializer_class = ProfileSerializer
+    queryset = Profile.objects.all()
+    permission_classes = [AllowAny]
+
+    def list(self, req, *args, **kwargs ):
+        username = self.kwargs['username']
+        logged_in_user = self.request.user
+        users = Profile.objects.filter(
+            Q(user__username__icontains=username) | Q(full_name__icontains=username) |
+            Q(user__email__icontains=username) # & ~Q(user=logged_in_user)
+        )
+
+        if not users.exists():
+            return Response({"details": "No user found"}, status=status.HTTP_404_NOT_FOUND)
+
+        serializer = self.get_serializer(users, many=True)
+        return Response(serializer.data)
+
+
