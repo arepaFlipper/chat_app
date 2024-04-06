@@ -112,3 +112,15 @@ class MyInbox(generics.ListAPIView):
 
         return messages
 
+class GetMessages(generics.ListAPIView):
+    serializer_class = ChatMessage
+
+    def get_queryset(self):
+        sender_id = self.kwargs['sender_id']
+        receiver_id = self.kwargs['receiver_id']
+
+        messages = ChatMessage.objects.filter(
+            sender__in=[sender_id, receiver_id],
+            reciever__in=[sender_id, receiver_id],
+        )
+        return messages
