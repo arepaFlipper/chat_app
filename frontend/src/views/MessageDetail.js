@@ -34,7 +34,7 @@ function MessageDetail() {
 
       try {
         axios.get(`${baseURL}/get-messages/${user_id}/${id}/`).then((res) => {
-          setMessage(res.data);
+          setMessages(res.data);
         }).catch((err) => { })
       } catch (error) {
 
