@@ -1,7 +1,36 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import "./style/Message.css";
+import useAxios from "../utils/useAxios";
+import jwtDecode from "jwt-decode";
 
 function Message() {
+  // NOTE: Define base api url
+  const baseURL = "http://127.0.0.1:8000/api";
+
+  // NOTE: create new states
+  const [messages, setMessages] = useState([]);
+
+  const axios = useAxios();
+
+  // NOTE: get token
+  const token = localStorage.getItem("authTokens");
+  const { access } = JSON.parse(token);
+  const decoded = jwtDecode(token);
+  const user_id = decoded.user_id;
+  const [message, setMessage] = useState([]);
+
+  useEffect(() => {
+    const url = `${baseURL}/my-messages/${user_id}/`;
+    try {
+      axios.get(url)
+        .then((res) => {
+          setMessage(res.data);
+        }).catch((err) => {
+        })
+    } catch (error) {
+    }
+  }, []);
+
   return (
     <main className="content" style={{ marginTop: "150px" }}>
       <div className="container p-0">
