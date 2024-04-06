@@ -20,4 +20,5 @@ urlpatterns = [
     # NOTE: Chat Message endpoints
     path("my-message/<user_id>/", views.MyInbox.as_view()),
     path("get-messages/<sender_id>/<receiver_id>/", views.GetMessages.as_view()),
+    path("get-messages/", views.SendMessage.as_view())
 ]

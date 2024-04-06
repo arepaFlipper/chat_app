@@ -124,3 +124,6 @@ class GetMessages(generics.ListAPIView):
             reciever__in=[sender_id, receiver_id],
         )
         return messages
+
+class SendMessage(generics.CreateAPIView):
+    serializer_class = MessageSerializer
