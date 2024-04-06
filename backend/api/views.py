@@ -127,6 +127,7 @@ class MyInbox(generics.ListAPIView):
 class GetMessages(generics.ListAPIView):
     # Define the serializer class to serialize the retrieved messages
     serializer_class = MessageSerializer
+    permission_classes = [IsAuthenticated]
 
     # Define a method to fetch the queryset of messages between the specified users
     def get_queryset(self):
