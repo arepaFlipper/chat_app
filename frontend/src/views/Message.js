@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import "./style/Message.css";
 import useAxios from "../utils/useAxios";
 import jwtDecode from "jwt-decode";
+import moment from "moment";
 
 function Message() {
   // NOTE: Define base api url
@@ -52,7 +53,9 @@ function Message() {
               {messages.map((message) => {
                 return (
                   <a key={message.id} href="#" className="list-group-item list-group-item-action border-0" >
-                    <div className="badge bg-success float-right">5</div>
+                    <div className="badge bg-success float-right text-white">
+                      {moment.utc(message.date).local().startOf('seconds').fromNow()}
+                    </div>
                     <div className="d-flex align-items-start">
                       {message.sender.id !== user_id && (
                         <img src={message.sender_profile.image} style={{ objectFit: "cover" }} className="rounded-circle mr-1" alt={message.sender_profile.full_name} width={40} height={40} />
