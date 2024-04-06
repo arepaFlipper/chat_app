@@ -11,9 +11,14 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ('id', 'username', 'email')
 
 class ProfileSerializer(serializers.ModelSerializer):
+    username = serializers.CharField(source="user.username", read_only=True)
     class Meta:
         model = Profile
-        fields = ["id", "user", "full_name", "image" ]
+        fields = ["id", "user", "full_name", "image", "username" ]
+
+    def get_username(self, obj):
+
+        return obj.user
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
