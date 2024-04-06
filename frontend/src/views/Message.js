@@ -17,14 +17,13 @@ function Message() {
   const { access } = JSON.parse(token);
   const decoded = jwtDecode(token);
   const user_id = decoded.user_id;
-  const [message, setMessage] = useState([]);
 
   useEffect(() => {
     const url = `${baseURL}/my-messages/${user_id}/`;
     try {
       axios.get(url)
         .then((res) => {
-          setMessage(res.data);
+          setMessages(res.data);
         }).catch((err) => {
         })
     } catch (error) {
@@ -49,168 +48,30 @@ function Message() {
                   </div>
                 </div>
               </div>
-              <a
-                href="#"
-                className="list-group-item list-group-item-action border-0"
-              >
-                <div className="badge bg-success float-right">5</div>
-                <div className="d-flex align-items-start">
-                  <img
-                    src="https://bootdey.com/img/Content/avatar/avatar5.png"
-                    className="rounded-circle mr-1"
-                    alt="Vanessa Tucker"
-                    width={40}
-                    height={40}
-                  />
-                  <div className="flex-grow-1 ml-3">
-                    Vanessa Tucker
-                    <div className="small">
-                      <span className="fas fa-circle chat-online" /> Online
+
+              {messages.map((message) => {
+                return (
+                  <a key={message.id} href="#" className="list-group-item list-group-item-action border-0" >
+                    <div className="badge bg-success float-right">5</div>
+                    <div className="d-flex align-items-start">
+                      {message.sender.id !== user_id && (
+                        <img src={message.sender_profile.image} style={{ objectFit: "cover" }} className="rounded-circle mr-1" alt={message.sender_profile.full_name} width={40} height={40} />
+                      )}
+                      {message.sender.id === user_id && (
+                        <img src={message.receiver_profile.image} className="rounded-circle mr-1" alt="Sharon Lessman" width={40} height={40} />
+                      )}
+                      <div className="flex-grow-1 ml-3">
+                        {(message.sender.id !== user_id) && (<h6 className="mb-1">{message.sender_profile.username}</h6>)}
+                        {(message.sender.id === user_id) && (<h6 className="mb-1">{message.receiver_profile.username}</h6>)}
+                        <div className="small">
+                          <span className="fas fa-circle chat-online" /> {message.message}
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                </div>
-              </a>
-              <a
-                href="#"
-                className="list-group-item list-group-item-action border-0"
-              >
-                <div className="badge bg-success float-right">2</div>
-                <div className="d-flex align-items-start">
-                  <img
-                    src="https://bootdey.com/img/Content/avatar/avatar2.png"
-                    className="rounded-circle mr-1"
-                    alt="William Harris"
-                    width={40}
-                    height={40}
-                  />
-                  <div className="flex-grow-1 ml-3">
-                    William Harris
-                    <div className="small">
-                      <span className="fas fa-circle chat-online" /> Online
-                    </div>
-                  </div>
-                </div>
-              </a>
-              <a
-                href="#"
-                className="list-group-item list-group-item-action border-0"
-              >
-                <div className="d-flex align-items-start">
-                  <img
-                    src="https://bootdey.com/img/Content/avatar/avatar3.png"
-                    className="rounded-circle mr-1"
-                    alt="Sharon Lessman"
-                    width={40}
-                    height={40}
-                  />
-                  <div className="flex-grow-1 ml-3">
-                    Sharon Lessman
-                    <div className="small">
-                      <span className="fas fa-circle chat-online" /> Online
-                    </div>
-                  </div>
-                </div>
-              </a>
-              <a
-                href="#"
-                className="list-group-item list-group-item-action border-0"
-              >
-                <div className="d-flex align-items-start">
-                  <img
-                    src="https://bootdey.com/img/Content/avatar/avatar4.png"
-                    className="rounded-circle mr-1"
-                    alt="Christina Mason"
-                    width={40}
-                    height={40}
-                  />
-                  <div className="flex-grow-1 ml-3">
-                    Christina Mason
-                    <div className="small">
-                      <span className="fas fa-circle chat-offline" /> Offline
-                    </div>
-                  </div>
-                </div>
-              </a>
-              <a
-                href="#"
-                className="list-group-item list-group-item-action border-0"
-              >
-                <div className="d-flex align-items-start">
-                  <img
-                    src="https://bootdey.com/img/Content/avatar/avatar5.png"
-                    className="rounded-circle mr-1"
-                    alt="Fiona Green"
-                    width={40}
-                    height={40}
-                  />
-                  <div className="flex-grow-1 ml-3">
-                    Fiona Green
-                    <div className="small">
-                      <span className="fas fa-circle chat-offline" /> Offline
-                    </div>
-                  </div>
-                </div>
-              </a>
-              <a
-                href="#"
-                className="list-group-item list-group-item-action border-0"
-              >
-                <div className="d-flex align-items-start">
-                  <img
-                    src="https://bootdey.com/img/Content/avatar/avatar2.png"
-                    className="rounded-circle mr-1"
-                    alt="Doris Wilder"
-                    width={40}
-                    height={40}
-                  />
-                  <div className="flex-grow-1 ml-3">
-                    Doris Wilder
-                    <div className="small">
-                      <span className="fas fa-circle chat-offline" /> Offline
-                    </div>
-                  </div>
-                </div>
-              </a>
-              <a
-                href="#"
-                className="list-group-item list-group-item-action border-0"
-              >
-                <div className="d-flex align-items-start">
-                  <img
-                    src="https://bootdey.com/img/Content/avatar/avatar4.png"
-                    className="rounded-circle mr-1"
-                    alt="Haley Kennedy"
-                    width={40}
-                    height={40}
-                  />
-                  <div className="flex-grow-1 ml-3">
-                    Haley Kennedy
-                    <div className="small">
-                      <span className="fas fa-circle chat-offline" /> Offline
-                    </div>
-                  </div>
-                </div>
-              </a>
-              <a
-                href="#"
-                className="list-group-item list-group-item-action border-0"
-              >
-                <div className="d-flex align-items-start">
-                  <img
-                    src="https://bootdey.com/img/Content/avatar/avatar3.png"
-                    className="rounded-circle mr-1"
-                    alt="Jennifer Chang"
-                    width={40}
-                    height={40}
-                  />
-                  <div className="flex-grow-1 ml-3">
-                    Jennifer Chang
-                    <div className="small">
-                      <span className="fas fa-circle chat-offline" /> Offline
-                    </div>
-                  </div>
-                </div>
-              </a>
+                  </a>
+                )
+              })}
+
               <hr className="d-block d-lg-none mt-1 mb-0" />
             </div>
             <div className="col-12 col-lg-7 col-xl-9">
