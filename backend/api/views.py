@@ -91,42 +91,57 @@ class TodoMarkAsCompleted(generics.RetrieveUpdateDestroyAPIView):
 
         return todo
 
+# Define a view to retrieve messages for a user's inbox
 class MyInbox(generics.ListAPIView):
+    # Define the serializer class to serialize the retrieved messages
     serializer_class = MessageSerializer
 
+    # Define a method to fetch the queryset of messages for the user's inbox
     def get_queryset(self):
+        # Retrieve the user_id from the URL kwargs
         user_id = self.kwargs['user_id']
 
+        # Retrieve messages from ChatMessage model
         messages = ChatMessage.objects.filter(
+            # Filter messages based on their IDs
             id__in =  Subquery(
+                # Subquery to filter distinct users involved in conversations
                 User.objects.filter(
-                    Q(sender__receiver=user_id) |
-                    Q(receiver__sender=user_id)
+                    Q(sender__receiver=user_id) |  # Filter messages where user is the sender
+                    Q(receiver__sender=user_id)     # Filter messages where user is the receiver
                 ).distinct().annotate(
+                    # Annotate each user with the ID of their last message
                     last_msg=Subquery(
                         ChatMessage.objects.filter(
-                            Q(sender=OuterRef('id'),receiver=user_id) |
-                            Q(receiver=OuterRef('id'),sender=user_id)
-                        ).order_by('-id')[:1].values_list('id',flat=True) 
+                            Q(sender=OuterRef('id'), receiver=user_id) |  # Filter user's sent messages
+                            Q(receiver=OuterRef('id'), sender=user_id)     # Filter user's received messages
+                        ).order_by('-id')[:1].values_list('id', flat=True)  # Order by ID and get the last message
                     )
-                ).values_list('last_msg', flat=True).order_by("-id")
+                ).values_list('last_msg', flat=True).order_by("-id")  # Get the ID of the last message for each user
             )
-        ).order_by("-id")
+        ).order_by("-id")  # Order the messages by their IDs in descending order (latest messages first)
             
-        return messages
+        return messages  # Return the queryset of messages
 
+# Define a view to retrieve messages between two specific users
 class GetMessages(generics.ListAPIView):
+    # Define the serializer class to serialize the retrieved messages
     serializer_class = MessageSerializer
 
+    # Define a method to fetch the queryset of messages between the specified users
     def get_queryset(self):
+        # Retrieve the sender_id and receiver_id from the URL kwargs
         sender_id = self.kwargs['sender_id']
         receiver_id = self.kwargs['receiver_id']
 
+        # Retrieve messages from ChatMessage model based on sender and receiver IDs
         messages = ChatMessage.objects.filter(
+            # Filter messages where the sender is either sender_id or receiver_id
             sender__in=[sender_id, receiver_id],
+            # Filter messages where the receiver is either sender_id or receiver_id
             receiver__in=[sender_id, receiver_id],
         )
-        return messages
+        return messages  # Return the queryset of messages
 
 class SendMessage(generics.CreateAPIView):
     serializer_class = MessageSerializer
