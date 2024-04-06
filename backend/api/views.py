@@ -98,20 +98,21 @@ class MyInbox(generics.ListAPIView):
         user_id = self.kwargs['user_id']
 
         messages = ChatMessage.objects.filter(
-            id__in=Subquery(
+            id__in =  Subquery(
                 User.objects.filter(
-                        Q(sender__receiver=user_id) | Q(receiver__sender=user_id)
-                    ).distinct().annotate(
+                    Q(sender__receiver=user_id) |
+                    Q(receiver__sender=user_id)
+                ).distinct().annotate(
                     last_msg=Subquery(
                         ChatMessage.objects.filter(
-                            Q(sender=OutRef('id'), receiver=user_id) |
-                            Q(receiver=OutRef('id'), sender=user_id)
-                        ).order_by("-id")[:1].values_list("id", flat=True)
+                            Q(sender=OuterRef('id'),receiver=user_id) |
+                            Q(receiver=OuterRef('id'),sender=user_id)
+                        ).order_by('-id')[:1].values_list('id',flat=True) 
                     )
-                ).values_list("last_msg", flat=Ture).order_by("-id")
+                ).values_list('last_msg', flat=True).order_by("-id")
             )
         ).order_by("-id")
-
+            
         return messages
 
 class GetMessages(generics.ListAPIView):

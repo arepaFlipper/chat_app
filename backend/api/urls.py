@@ -18,7 +18,7 @@ urlpatterns = [
     path("todo-mark-as-completed/<user_id>/<todo_id>/", views.TodoMarkAsCompleted.as_view()),
 
     # NOTE: Chat Message endpoints
-    path("my-message/<user_id>/", views.MyInbox.as_view()),
+    path("my-messages/<user_id>/", views.MyInbox.as_view()),
     path("get-messages/<sender_id>/<receiver_id>/", views.GetMessages.as_view()),
     path("get-messages/", views.SendMessage.as_view()),
 
