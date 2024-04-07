@@ -4,6 +4,9 @@ from django.contrib.auth.models import AbstractUser
 
 
 class User(AbstractUser):
+    """
+    Custom user model extending AbstractUser.
+    """
     username = models.CharField(max_length=100)
     email = models.EmailField(unique=True)
 
@@ -12,9 +15,15 @@ class User(AbstractUser):
 
 
     def profile(self):
+        """
+        Get the profile of the user.
+        """
         profile = Profile.objects.get(user=self)
 
 class Profile(models.Model):
+    """
+    Profile model for additional user information.
+    """
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     full_name = models.CharField(max_length=1000, null=True, blank=True)
     bio = models.CharField(max_length=100, null=True, blank=True)
@@ -22,16 +31,25 @@ class Profile(models.Model):
     verified = models.BooleanField(default=False)
 
     def save(self, *args, **kwargs):
+        """
+        Override save method to set default full name.
+        """
         if self.full_name == "" or self.full_name == None:
             self.full_name = self.user.username
         super(Profile, self).save(*args, **kwargs)
 
 
 def create_user_profile(sender, instance, created, **kwargs):
+    """
+    Signal handler to create user profile when user is created.
+    """
     if created:
         Profile.objects.create(user=instance)
 
 def save_user_profile(sender, instance, **kwargs):
+    """
+    Signal handler to save user profile.
+    """
     instance.profile.save()
 
 post_save.connect(create_user_profile, sender=User)
@@ -39,6 +57,9 @@ post_save.connect(save_user_profile, sender=User)
 
 
 class Todo(models.Model):
+    """
+    Todo model for user tasks.
+    """
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=1000)
     completed = models.BooleanField(default=False)
@@ -48,6 +69,9 @@ class Todo(models.Model):
         return self.title[:30]
 
 class ChatMessage(models.Model):
+    """
+    Model for chat messages between users.
+    """
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user")
     sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name="sender")
     receiver = models.ForeignKey(User, on_delete=models.CASCADE, related_name="receiver")
@@ -65,11 +89,17 @@ class ChatMessage(models.Model):
 
     @property
     def sender_profile(self):
+        """
+        Property to get the profile of the sender.
+        """
         sender_profile = Profile.objects.get(user=self.sender)
         return sender_profile
 
     @property
     def receiver_profile(self):
+        """
+        Property to get the profile of the receiver.
+        """
         receiver_profile = Profile.objects.get(user=self.sender)
         return receiver_profile
 

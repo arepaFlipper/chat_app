@@ -6,26 +6,35 @@ from rest_framework.validators import UniqueValidator
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 class UserSerializer(serializers.ModelSerializer):
+    """
+    Serializer for the User model.
+    """
     class Meta:
         model = User
         fields = ('id', 'username', 'email')
 
 class ProfileSerializer(serializers.ModelSerializer):
+    """
+    Serializer for the Profile model.
+    """
     username = serializers.CharField(source="user.username", read_only=True)
+
     class Meta:
         model = Profile
         fields = ["id", "user", "full_name", "image", "username" ]
 
     def get_username(self, obj):
-
         return obj.user
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
+    """
+    Custom token serializer extending TokenObtainPairSerializer.
+    """
     @classmethod
     def get_token(cls, user):
         token = super().get_token(user)
         
-        # These are claims, you can add custom claims
+        # Custom claims
         token['full_name'] = user.profile.full_name
         token['username'] = user.username
         token['email'] = user.email
@@ -33,10 +42,13 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         token['image'] = str(user.profile.image)
         token['verified'] = user.profile.verified
         # ...
+
         return token
 
-
 class RegisterSerializer(serializers.ModelSerializer):
+    """
+    Serializer for user registration.
+    """
     password = serializers.CharField(
         write_only=True, required=True, validators=[validate_password])
     password2 = serializers.CharField(write_only=True, required=True)
@@ -56,7 +68,6 @@ class RegisterSerializer(serializers.ModelSerializer):
         user = User.objects.create(
             username=validated_data['username'],
             email=validated_data['email']
-
         )
 
         user.set_password(validated_data['password'])
@@ -64,17 +75,22 @@ class RegisterSerializer(serializers.ModelSerializer):
 
         return user
     
-
 class TodoSerializer(serializers.ModelSerializer):
-
+    """
+    Serializer for the Todo model.
+    """
     class Meta:
         model = Todo
         fields = ['id', 'user', 'title', 'completed']
 
 class MessageSerializer(serializers.ModelSerializer):
+    """
+    Serializer for the ChatMessage model.
+    """
     receiver_profile = ProfileSerializer(read_only=True)
     sender_profile = ProfileSerializer(read_only=True)
 
     class Meta:
         model = ChatMessage
         fields = ["id", "user","sender", "sender_profile", "receiver", "receiver_profile", "message", "is_read" , "date"]
+

@@ -145,30 +145,45 @@ class GetMessages(generics.ListAPIView):
         return messages  # Return the queryset of messages
 
 class SendMessage(generics.CreateAPIView):
+    """
+    View for sending a message.
+    """
     serializer_class = MessageSerializer
 
 class ProfileDetail(generics.RetrieveUpdateAPIView):
+    """
+    View for retrieving and updating user profile details.
+    """
     serializer_class = ProfileSerializer
     queryset = Profile.objects.all()
     permission_classes = [IsAuthenticated]
 
 class SearchUser(generics.ListAPIView):
+    """
+    View for searching users by username, full name, or email.
+    """
     serializer_class = ProfileSerializer
     queryset = Profile.objects.all()
     permission_classes = [AllowAny]
 
-    def list(self, req, *args, **kwargs ):
+    def list(self, request, *args, **kwargs):
+        """
+        Custom list method for searching users by username, full name, or email.
+        """
         username = self.kwargs['username']
         logged_in_user = self.request.user
+
+        # Filtering users based on username, full name, or email
         users = Profile.objects.filter(
-            Q(user__username__icontains=username) | Q(full_name__icontains=username) |
-            Q(user__email__icontains=username) # & ~Q(user=logged_in_user)
+            Q(user__username__icontains=username) |
+            Q(full_name__icontains=username) |
+            Q(user__email__icontains=username)
         )
 
+        # If no users found, return 404
         if not users.exists():
             return Response({"details": "No user found"}, status=status.HTTP_404_NOT_FOUND)
 
+        # Serialize and return the users
         serializer = self.get_serializer(users, many=True)
         return Response(serializer.data)
-
-
