@@ -5,6 +5,7 @@ import { jwtDecode } from "jwt-decode";
 import moment from "moment";
 import { useParams, Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import type { TMessage, TProfile } from "@/types";
 
 function MessageDetail() {
   const baseURL = "http://127.0.0.1:8000/api";
@@ -16,7 +17,7 @@ function MessageDetail() {
 
   const { id } = useParams();
   const token = localStorage.getItem("authTokens");
-  const decoded = jwtDecode(token);
+  const decoded: { user_id: number } = jwtDecode(token as string);
   const user_id = decoded.user_id;
 
   const axios = useAxios();
@@ -28,7 +29,7 @@ function MessageDetail() {
     try {
       axios.get(url)
         .then((res) => {
-          document.getElementById("text-input").value = "";
+          (document.getElementById("text-input") as HTMLInputElement).value = "";
           setMessages(res.data);
         }).catch((err) => {
         })
@@ -54,7 +55,7 @@ function MessageDetail() {
   }, [history, id]);
 
   // NOTE: Capture changes made by the user in those fields and update the component's state accordingly
-  const handleNewMessage = (event) => {
+  const handleNewMessage = (event: React.ChangeEvent<HTMLInputElement>) => {
     setNewMessage({
       ...newMessage,
       [event.target.name]: event.target.value
@@ -63,11 +64,11 @@ function MessageDetail() {
 
   const SendMessage = () => {
     const formData = new FormData();
-    formData.append("user", user_id);
-    formData.append("sender", user_id);
-    formData.append("receiver", id);
-    formData.append("message", newMessage.message);
-    formData.append("is_read", false);
+    formData.append("user", user_id as unknown as string);
+    formData.append("sender", user_id as unknown as string);
+    formData.append("receiver", id as unknown as string);
+    formData.append("message", newMessage.message as unknown as string);
+    formData.append("is_read", false as unknown as string);
 
     try {
       axios.post(`${baseURL}/get-messages/`, formData).then((res) => {
@@ -87,7 +88,7 @@ function MessageDetail() {
     }
   }
 
-  const handleSearchChange = (event) => {
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setNewSearch({
       ...newSearch,
       [event.target.name]: event.target.value
@@ -105,7 +106,7 @@ function MessageDetail() {
     })
   }
 
-  const receiver_profile = messages.find((msg) => msg.receiver === user_id)?.receiver_profile || { profile_picture: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png" };
+  const receiver_profile = (messages.find((msg: TMessage) => msg.receiver === user_id)! as TMessage)?.receiver_profile || { profile_picture: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png" };
 
   return (
     <main className="content" style={{ marginTop: "150px" }}>
@@ -125,22 +126,22 @@ function MessageDetail() {
                 </div>
               </div>
 
-              {messages.map((msg, idx) => {
+              {messages.map((msg: TMessage, idx) => {
                 return (
-                  <Link to={`/inbox/${(msg.sender === user_id ? msg.receiver : msg.sender)}`} key={idx} href="#" className="list-group-item list-group-item-action border-0" >
+                  <Link to={`/inbox/${(msg.sender === user_id ? msg.receiver : msg.sender)}`} key={idx} className="list-group-item list-group-item-action border-0" >
                     <div className="badge bg-success float-right text-white">
                       {moment.utc(msg.date).local().startOf('seconds').fromNow()}
                     </div>
                     <div className="d-flex align-items-start">
-                      {msg.sender.id !== user_id && (
+                      {msg.sender !== user_id && (
                         <img src={msg.receiver_profile.image} style={{ objectFit: "cover" }} className="rounded-circle mr-1" alt={msg.sender_profile.full_name} width={40} height={40} />
                       )}
-                      {msg.sender.id === user_id && (
+                      {msg.sender === user_id && (
                         <img src={msg.sender_profile.image} className="rounded-circle mr-1" alt="Sharon Lessman" width={40} height={40} />
                       )}
                       <div className="flex-grow-1 ml-3">
-                        {(msg.sender.id !== user_id) && (<h6 className="mb-1">{msg.receiver_profile.username}</h6>)}
-                        {(msg.sender.id === user_id) && (<h6 className="mb-1">{msg.sender_profile.username}</h6>)}
+                        {(msg.sender !== user_id) && (<h6 className="mb-1">{msg.receiver_profile.username}</h6>)}
+                        {(msg.sender === user_id) && (<h6 className="mb-1">{msg.sender_profile.username}</h6>)}
                         <div className="small">
                           <span className="fas fa-circle chat-online" /> {msg.message}
                         </div>
@@ -228,7 +229,7 @@ function MessageDetail() {
               <div className="position-relative">
                 <div className="chat-messages p-4">
 
-                  {messages.map((msg, index) => {
+                  {messages.map((msg: TMessage, index) => {
                     return (
                       <div key={index}>
                         {(msg.sender === user_id) ? (
