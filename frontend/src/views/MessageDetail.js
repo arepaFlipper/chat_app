@@ -105,6 +105,8 @@ function MessageDetail() {
     })
   }
 
+  const receiver_profile = messages.find((msg) => msg.receiver === user_id)?.receiver_profile || { profile_picture: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png" };
+
   return (
     <main className="content" style={{ marginTop: "150px" }}>
       <div className="container p-0">
@@ -155,15 +157,15 @@ function MessageDetail() {
                 <div className="d-flex align-items-center py-1">
                   <div className="position-relative">
                     <img
-                      src="https://bootdey.com/img/Content/avatar/avatar3.png"
+                      src={receiver_profile.image}
                       className="rounded-circle mr-1"
-                      alt="Sharon Lessman"
+                      alt={receiver_profile.username}
                       width={40}
                       height={40}
                     />
                   </div>
                   <div className="flex-grow-1 pl-3">
-                    <strong>Sharon Lessman</strong>
+                    <strong>{receiver_profile.username}</strong>
                     <div className="text-muted small">
                       <em>Online</em>
                     </div>
