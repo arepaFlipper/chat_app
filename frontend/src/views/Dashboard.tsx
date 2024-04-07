@@ -1,17 +1,26 @@
 import { useState, useEffect } from 'react'
 import useAxios from "../utils/useAxios"
 import { jwtDecode } from 'jwt-decode'
-function Dashboard() {
 
-  const [res, setRes] = useState("")
+interface IToken {
+  user_id: number
+  username: string
+  full_name: string
+  image: string
+}
+
+const Dashboard = () => {
+
+  const [res, setRes] = useState<string>("")
   const api = useAxios();
   const token = localStorage.getItem("authTokens")
+  let username: string = "";
 
   if (token) {
-    const decode = jwtDecode(token)
-    const user_id = decode.user_id
-    var username = decode.username
-    const full_name = decode.full_name
+    const decode = jwtDecode<IToken>(token)
+    const user_id = decode.user_id;
+    username = decode.username;
+    const full_name = decode.full_name;
     const image = decode.image
 
   }
