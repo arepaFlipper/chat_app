@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react';
 import "@/views/style/Message.css";
 import useAxios from "@/utils/useAxios";
 import { jwtDecode } from "jwt-decode";
@@ -8,22 +8,30 @@ import { useNavigate } from "react-router-dom";
 import type { TMessage, TProfile } from "@/types";
 
 const MessageDetail = () => {
+  // Base URL for API requests
   const BASE_URL = import.meta.env.BASE_URL;
+
+  // State variables
   const [message, setMessage] = useState([]);
   const [messages, setMessages] = useState([]);
-
   const [newMessage, setNewMessage] = useState({ message: "" });
   const [newSearch, setNewSearch] = useState({ username: "" });
 
+  // Get user ID from URL params
   const { id } = useParams();
+
+  // Get user ID from JWT token
   const token = localStorage.getItem("authTokens");
   const decoded: { user_id: number } = jwtDecode(token as string);
   const user_id = decoded.user_id;
 
+  // Axios instance for API requests
   const axios = useAxios();
 
+  // Navigation hook
   const navigate = useNavigate();
 
+  // Fetch messages when component mounts
   useEffect(() => {
     const url = `${BASE_URL}/my-messages/${user_id}/`;
     try {
@@ -32,21 +40,22 @@ const MessageDetail = () => {
           (document.getElementById("text-input") as HTMLInputElement).value = "";
           setMessages(res.data);
         }).catch((err) => {
+          // Handle errors
         })
     } catch (error) {
+      // Handle errors
     }
   }, []);
 
-  // NOTE: This is a quite expensive operation for a server 🤔
+  // Fetch messages at intervals to keep updated
   useEffect(() => {
     const interval = setInterval(() => {
-
       try {
         axios.get(`${BASE_URL}/get-messages/${user_id}/${id}/`).then((res) => {
           setMessages(res.data);
         }).catch((err) => { })
       } catch (error) {
-
+        // Handle errors
       }
     }, 1000);
     return () => {
@@ -54,7 +63,7 @@ const MessageDetail = () => {
     }
   }, [history, id]);
 
-  // NOTE: Capture changes made by the user in those fields and update the component's state accordingly
+  // Handle changes in new message input field
   const handleNewMessage = (event: React.ChangeEvent<HTMLInputElement>) => {
     setNewMessage({
       ...newMessage,
@@ -62,6 +71,7 @@ const MessageDetail = () => {
     })
   }
 
+  // Send new message
   const SendMessage = () => {
     const formData = new FormData();
     formData.append("user", user_id as unknown as string);
@@ -88,6 +98,7 @@ const MessageDetail = () => {
     }
   }
 
+  // Handle changes in search input field
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setNewSearch({
       ...newSearch,
@@ -95,7 +106,7 @@ const MessageDetail = () => {
     });
   }
 
-
+  // Search for user
   const SearchUser = () => {
     axios.get(`${BASE_URL}/search/${newSearch.username}/`).then((res) => {
       navigate(`/search/${newSearch.username}/`);
@@ -106,8 +117,8 @@ const MessageDetail = () => {
     })
   }
 
+  // Get receiver profile
   const receiver_profile = (messages.find((msg: TMessage) => msg.receiver === user_id)! as TMessage)?.receiver_profile || { profile_picture: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png" };
-
   return (
     <main className="content" style={{ marginTop: "150px" }}>
       <div className="container p-0">
@@ -125,7 +136,7 @@ const MessageDetail = () => {
                   </div>
                 </div>
               </div>
-
+              {/* Display left list of messages */}
               {messages.map((msg: TMessage, idx) => {
                 return (
                   <Link to={`/inbox/${(msg.sender === user_id ? msg.receiver : msg.sender)}`} key={idx} className="list-group-item list-group-item-action border-0" >
@@ -229,6 +240,7 @@ const MessageDetail = () => {
               <div className="position-relative">
                 <div className="chat-messages p-4">
 
+                  {/* Display right chat messages */}
                   {messages.map((msg: TMessage, index) => {
                     return (
                       <div key={index}>

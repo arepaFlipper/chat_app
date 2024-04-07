@@ -1,16 +1,17 @@
-import { useContext } from 'react'
-import { jwtDecode } from "jwt-decode"
-import AuthContext from '@/context/AuthContext'
-import { Link } from 'react-router-dom'
+import { useContext } from 'react';
+import { jwtDecode } from "jwt-decode";
+import AuthContext from '@/context/AuthContext';
+import { Link } from 'react-router-dom';
 
 const Navbar = () => {
 
-  const { user, logoutUser } = useContext(AuthContext)
-  const token = localStorage.getItem("authTokens")
+  const { user, logoutUser } = useContext(AuthContext); // Get user and logoutUser from AuthContext
+  const token = localStorage.getItem("authTokens"); // Get token from localStorage
 
   if (token) {
-    const decoded: { user_id: number } = jwtDecode(token)
-    const user_id = decoded.user_id
+    // If token exists, decode it
+    const decoded: { user_id: number } = jwtDecode(token);
+    const user_id = decoded.user_id;
   }
 
   return (

@@ -1,23 +1,23 @@
-import { useContext } from 'react'
-import { Link } from 'react-router-dom'
-import AuthContext from '@/context/AuthContext'
-
-
+import { useContext } from 'react';
+import { Link } from 'react-router-dom';
+import AuthContext from '@/context/AuthContext';
 
 const Loginpage = () => {
+  // Get the loginUser function from AuthContext
+  const { loginUser } = useContext<any>(AuthContext);
 
-  const { loginUser } = useContext<any>(AuthContext)
+  // Handle form submission
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
+    e.preventDefault();
     const form_data = new FormData(e.currentTarget);
     const email: string = form_data.get("email") as string;
     const password: string = form_data.get("password") as string;
 
-    email.length > 0 && loginUser(email, password)
+    // Call loginUser function with email and password
+    email.length > 0 && loginUser(email, password);
 
-    console.log(email)
-    console.log(password)
-
+    console.log(email);
+    console.log(password);
   }
 
   return (
@@ -39,6 +39,7 @@ const Loginpage = () => {
                     </div>
                     <div className="col-md-6 col-lg-7 d-flex align-items-center">
                       <div className="card-body p-4 p-lg-5 text-black">
+                        {/* Form for login */}
                         <form onSubmit={handleSubmit}>
                           <div className="d-flex align-items-center mb-3 pb-1">
                             <div className="d-flex align-items-center mb-3 pb-1">
@@ -123,4 +124,4 @@ const Loginpage = () => {
   )
 }
 
-export default Loginpage
+export default Loginpage;

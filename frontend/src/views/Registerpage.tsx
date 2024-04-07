@@ -5,22 +5,19 @@ import AuthContext from '@/context/AuthContext'
 
 const Registerpage = () => {
 
+  // NOTE: declare state form variables
   const [email, setEmail] = useState("")
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
   const [password2, setPassword2] = useState("")
 
+  //NOTE: Accessing registerUser function from AuthContext
   const { registerUser } = useContext(AuthContext)
 
-  console.log(email);
-  console.log(username);
-  console.log(password);
-  console.log(password2);
-
-
+  // NOTE: Function to handle form submission
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    registerUser(email, username, password, password2)
+    e.preventDefault();
+    registerUser(email, username, password, password2);
   }
 
 
@@ -41,6 +38,7 @@ const Registerpage = () => {
                         style={{ borderRadius: "1rem 0 0 1rem" }}
                       />
                     </div>
+                    {/* Form column */}
                     <div className="col-md-6 col-lg-7 d-flex align-items-center">
                       <div className="card-body p-4 p-lg-5 text-black">
                         <form onSubmit={handleSubmit}>
@@ -50,7 +48,7 @@ const Registerpage = () => {
                               style={{ color: "#ff6219" }}
                             />
                             <span className="h2 fw-bold mb-0">
-                              Welcome to <b>Desphixs👋</b>
+                              Welcome to <b>Telesign Chat Demo👋</b>
                             </span>
                           </div>
                           <h5

@@ -1,8 +1,8 @@
-
 const Homepage = () => {
   return (
     <div>
       <>
+        {/* Main content area */}
         <main role="madin" style={{ marginTop: 50 }}>
           {/* Main jumbotron for a primary marketing message or call to action */}
           <div className="jumbotron">
@@ -69,15 +69,16 @@ const Homepage = () => {
             </div>
             <hr />
           </div>{" "}
-          {/* /container */}
+          {/* End of container */}
         </main>
+        {/* Footer section */}
         <footer className="container">
           <p>© Company 2017-2018</p>
         </footer>
       </>
-
     </div>
   )
 }
 
 export default Homepage
+
