@@ -64,7 +64,8 @@ function Message() {
       try {
         axios.get(url)
           .then((res) => {
-            setMessages(res.data);
+            const sortedMessages = res.data.sort((a, b) => new Date(a.date) - new Date(b.date));
+            setMessages(sortedMessages);
           }).catch((err) => {
           })
       } catch (error) {
