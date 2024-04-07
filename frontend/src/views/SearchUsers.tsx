@@ -1,14 +1,14 @@
 import './style/Message.css';
 import { useState, useEffect } from 'react';
 import useAxios from '../utils/useAxios';
-import { Link, useParams, useHistory } from 'react-router-dom/';
+import { Link, useParams, useNavigate } from 'react-router-dom/';
 import swal from "sweetalert2";
 
 function SearchUsers() {
 
   const baseURL = 'http://127.0.0.1:8000/api';
   const axios = useAxios();
-  const history = useHistory();
+  const navigate = useNaviage();
   const [users, setUsers] = useState([]);
   const [profiles, setProfile] = useState([]);
   const [newSearch, setnewSearch] = useState({ username: "", });
@@ -49,7 +49,7 @@ function SearchUsers() {
     if (newSearch.username === "") return;
     axios.get(`${baseURL}/search/${newSearch.username}/`)
       .then((res) => {
-        history.push(`/search/${newSearch.username}/`);
+        navigate(`/search/${newSearch.username}/`);
         setUsers(res.data)
 
       })

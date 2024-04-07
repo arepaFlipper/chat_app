@@ -4,7 +4,7 @@ import useAxios from "../utils/useAxios";
 import { jwtDecode } from "jwt-decode";
 import moment from "moment";
 import { useParams, Link } from "react-router-dom";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 function MessageDetail() {
   const baseURL = "http://127.0.0.1:8000/api";
@@ -21,7 +21,7 @@ function MessageDetail() {
 
   const axios = useAxios();
 
-  const history = useHistory();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const url = `${baseURL}/my-messages/${user_id}/`;
@@ -97,7 +97,7 @@ function MessageDetail() {
 
   const SearchUser = () => {
     axios.get(`${baseURL}/search/${newSearch.username}/`).then((res) => {
-      history.push(`/search/${newSearch.username}/`);
+      navigate(`/search/${newSearch.username}/`);
     }).catch((err) => {
       if (err.response.status === 404) {
         alert("User not found");

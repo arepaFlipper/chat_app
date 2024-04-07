@@ -4,7 +4,7 @@ import useAxios from "../utils/useAxios";
 import { jwtDecode } from "jwt-decode";
 import moment from "moment";
 import { Link } from "react-router-dom";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 function Message() {
   // NOTE: Define base api url
@@ -20,7 +20,7 @@ function Message() {
   const { access } = JSON.parse(token);
   const decoded = jwtDecode(token);
   const user_id = decoded.user_id;
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const [newMessage, setNewMessage] = useState({ message: "" });
   const [newSearch, setNewSearch] = useState({ username: "" });
@@ -78,7 +78,7 @@ function Message() {
 
   const SearchUser = () => {
     axios.get(`${baseURL}/search/${newSearch.username}/`).then((res) => {
-      history.push(`/search/${newSearch.username}/`);
+      navigate(`/search/${newSearch.username}/`);
     }).catch((err) => {
       if (err.response.status === 404) {
         alert("User not found");

@@ -18,10 +18,10 @@ function App() {
       <AuthProvider>
         < Navbar />
         <Routes>
-          {/* <PrivateRoute element={<Dashboard />} path="/dashboard" /> */}
-          {/* <PrivateRoute element={<Message />} path="/inbox" /> */}
-          {/* <PrivateRoute element={<MessageDetail />} path="/inbox/:id" /> */}
-          {/* <PrivateRoute element={<SearchUsers />} path="/search/:username" /> */}
+          <Route element={<PrivateRoute children={<Dashboard />} path="/dashboard" />} path="/dashboard" />
+          <Route element={<PrivateRoute children={<Message />} path="/inbox" />} path="/inbox" />
+          <Route element={<PrivateRoute children={<MessageDetail />} path="/inbox/:id" />} path="/inbox/:id" />
+          <Route element={<PrivateRoute children={<SearchUsers />} path="/search/:username" />} path="/search/:username" />
           <Route element={<Loginpage />} path="/login" />
           <Route element={<Registerpage />} path="/register" />
           <Route element={<Homepage />} path="/" />
