@@ -9,8 +9,8 @@ function Todo() {
   const api = useAxios()
 
   const token = localStorage.getItem("authTokens") // 233704237huhweioyop;yrwriweyrwe
-  const decoded = jwtDecode(token)
-  const user_id = decoded.user_id
+  const decoded: { user_id: number } = jwtDecode(token as string);
+  const user_id = decoded.user_id as number;
 
   const [todo, setTodo] = useState([])
   useEffect(() => {
@@ -26,7 +26,7 @@ function Todo() {
 
 
   const [createTodo, setCreateTodo] = useState({ title: "", completed: "" })
-  const handleNewTodoTitle = (event) => {
+  const handleNewTodoTitle = (event: React.ChangeEvent<HTMLInputElement>) => {
     setCreateTodo({
       ...createTodo,
       [event.target.name]: event.target.value
@@ -38,9 +38,9 @@ function Todo() {
   const formSubmit = () => {
     const formdata = new FormData()
 
-    formdata.append("user", user_id)
-    formdata.append("title", createTodo.title)
-    formdata.append("completed", false)
+    formdata.append("user", user_id as unknown as string)
+    formdata.append("title", createTodo.title as unknown as string)
+    formdata.append("completed", false as unknown as string)
 
     try {
       api.post(baseUrl + '/todo/' + user_id + '/', formdata).then((res) => {
@@ -61,7 +61,7 @@ function Todo() {
     }
   }
 
-  const deleteTodo = async (todo_id) => {
+  const deleteTodo = async (todo_id: number) => {
     await api.delete(baseUrl + '/todo-detail/' + user_id + '/' + todo_id + '/')
     Swal.fire({
       title: "Todo Deleted",
@@ -74,7 +74,7 @@ function Todo() {
     fetchTodos()
   }
 
-  const markTodoAsComplete = async (todo_id) => {
+  const markTodoAsComplete = async (todo_id: number) => {
     await api.patch(baseUrl + '/todo-mark-as-completed/' + user_id + '/' + todo_id + '/')
     Swal.fire({
       title: "Todo Completed",
@@ -105,16 +105,12 @@ function Todo() {
                 <button type="button" onClick={formSubmit} className="btn btn-primary mb-2 ml-2"> Add todo </button>
               </div>
               <div className="row" id="todo-container">
-                {todo.map((todo) =>
+                {todo.map((todo: { id: number, title: string, completed: boolean }) =>
 
                   <div className="col col-12 p-2 todo-item">
                     <div className="input-group">
-                      {todo.completed.toString() === "true" &&
-                        <p className="form-control"><strike>{todo.title}</strike></p>
-                      }
-                      {todo.completed.toString() === "false" &&
-                        <p className="form-control">{todo.title}</p>
-                      }
+                      {todo.completed.toString() === "true" && (<p className="form-control">{todo.title}</p>)}
+                      {todo.completed.toString() === "false" && (<p className="form-control">{todo.title}</p>)}
                       <div className="input-group-append">
                         <button className="btn bg-success text-white ml-2" type="button" id="button-addon2 " onClick={() => markTodoAsComplete(todo.id)}><i className='fas fa-check' ></i></button>
                         <button className="btn bg-danger text-white me-2 ms-2 ml-2" type="button" id="button-addon2 " onClick={() => deleteTodo(todo.id)}><i className='fas fa-trash' ></i></button>
