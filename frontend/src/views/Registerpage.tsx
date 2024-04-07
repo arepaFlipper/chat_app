@@ -1,16 +1,16 @@
-import {useState, useContext} from 'react'
+import { useState, useContext } from 'react'
 import { Link } from 'react-router-dom'
 import AuthContext from '../context/AuthContext'
 
 
-function Registerpage() {
+const Registerpage = () => {
 
   const [email, setEmail] = useState("")
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
   const [password2, setPassword2] = useState("")
 
-  const {registerUser} = useContext(AuthContext)
+  const { registerUser } = useContext(AuthContext)
 
   console.log(email);
   console.log(username);
@@ -18,11 +18,11 @@ function Registerpage() {
   console.log(password2);
 
 
-  const handleSubmit = async e => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     registerUser(email, username, password, password2)
   }
-  
+
 
   return (
     <div>
@@ -143,7 +143,7 @@ function Registerpage() {
           </div>
           {/* Copyright */}
         </footer>
-    </>
+      </>
 
     </div>
   )
