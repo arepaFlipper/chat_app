@@ -1,4 +1,3 @@
-import React from 'react';
 import './style/Message.css';
 import { useState, useEffect } from 'react';
 import useAxios from '../utils/useAxios';
