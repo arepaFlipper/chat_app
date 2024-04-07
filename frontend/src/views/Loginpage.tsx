@@ -29,11 +29,11 @@ const Loginpage = () => {
               <div className="col col-xl-10">
                 <div className="card" style={{ borderRadius: "1rem" }}>
                   <div className="row g-0">
-                    <div className="col-md-6 col-lg-5 d-none d-md-block">
+                    <div className="col-md-2 col-lg-5 d-flex justify-content-center ">
                       <img
-                        src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/img1.webp"
+                        src="/logo-color.png"
                         alt="login form"
-                        className="img-fluid"
+                        className="img-fluid ratio ratio-1x1"
                         style={{ borderRadius: "1rem 0 0 1rem" }}
                       />
                     </div>
@@ -41,15 +41,8 @@ const Loginpage = () => {
                       <div className="card-body p-4 p-lg-5 text-black">
                         <form onSubmit={handleSubmit}>
                           <div className="d-flex align-items-center mb-3 pb-1">
-                            <i
-                              className="fas fa-cubes fa-2x me-3"
-                              style={{ color: "#ff6219" }}
-                            />
                             <div className="d-flex align-items-center mb-3 pb-1">
-                              <i
-                                className="fas fa-cubes fa-2x me-3"
-                                style={{ color: "#ff6219" }}
-                              />
+                              <img style={{ width: "120px", padding: "6px" }} src="/logo.png" alt="" />
                               <span className="h2 fw-bold mb-0">Welcome back 👋</span>
                             </div>
                           </div>
