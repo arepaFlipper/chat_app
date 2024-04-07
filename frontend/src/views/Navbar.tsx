@@ -1,5 +1,5 @@
 import { useContext } from 'react'
-import jwt_decode from "jwt-decode"
+import { jwtDecode } from "jwt-decode"
 import AuthContext from '../context/AuthContext'
 import { Link } from 'react-router-dom'
 
@@ -9,8 +9,8 @@ function Navbar() {
   const token = localStorage.getItem("authTokens")
 
   if (token) {
-    const decoded = jwt_decode(token)
-    var user_id = decoded.user_id
+    const decoded = jwtDecode(token)
+    const user_id = decoded.user_id
   }
 
   return (

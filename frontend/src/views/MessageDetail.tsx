@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import "./style/Message.css";
 import useAxios from "../utils/useAxios";
-import jwtDecode from "jwt-decode";
+import { jwtDecode } from "jwt-decode";
 import moment from "moment";
 import { useParams, Link } from "react-router-dom";
 import { useHistory } from "react-router-dom";
@@ -38,7 +38,7 @@ function MessageDetail() {
 
   // NOTE: This is a quite expensive operation for a server 🤔
   useEffect(() => {
-    let interval = setInterval(() => {
+    const interval = setInterval(() => {
 
       try {
         axios.get(`${baseURL}/get-messages/${user_id}/${id}/`).then((res) => {
@@ -295,6 +295,6 @@ function MessageDetail() {
       </div>
     </main>
   );
-};
+}
 
 export default MessageDetail;

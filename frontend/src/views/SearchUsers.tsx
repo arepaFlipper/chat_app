@@ -3,7 +3,7 @@ import './style/Message.css';
 import { useState, useEffect } from 'react';
 import useAxios from '../utils/useAxios';
 import { Link, useParams, useHistory } from 'react-router-dom/';
-const swal = require('sweetalert2');
+import swal from "sweetalert2";
 
 function SearchUsers() {
 
@@ -12,7 +12,7 @@ function SearchUsers() {
   const history = useHistory();
   const [users, setUsers] = useState([]);
   const [profiles, setProfile] = useState([]);
-  let [newSearch, setnewSearch] = useState({ username: "", });
+  const [newSearch, setnewSearch] = useState({ username: "", });
   const [loading, setLoading] = useState(true);
 
   const { username } = useParams();

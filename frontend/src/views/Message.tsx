@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import "./style/Message.css";
 import useAxios from "../utils/useAxios";
-import jwtDecode from "jwt-decode";
+import { jwtDecode } from "jwt-decode";
 import moment from "moment";
 import { Link } from "react-router-dom";
 import { useHistory } from "react-router-dom";
@@ -59,7 +59,7 @@ function Message() {
   }
 
   useEffect(() => {
-    let interval = setInterval(() => {
+    const interval = setInterval(() => {
       const url = `${baseURL}/my-messages/${user_id}/`;
       try {
         axios.get(url)
