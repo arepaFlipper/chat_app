@@ -2,22 +2,31 @@ import { createContext, useState, useEffect } from "react";
 import { jwtDecode } from "jwt-decode";
 import { useNavigate } from "react-router-dom";
 import swal from "sweetalert2";
+import type { AuthContextType } from "@/types";
 
-const AuthContext = createContext();
+const AuthContext = createContext<AuthContextType>({
+  user: null,
+  setUser: () => { },
+  authTokens: null,
+  setAuthTokens: () => { },
+  registerUser: async () => { },
+  loginUser: async () => { },
+  logoutUser: () => { }
+});
 
 export default AuthContext;
 
-export const AuthProvider = ({ children }) => {
+export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [authTokens, setAuthTokens] = useState(() =>
     localStorage.getItem("authTokens")
-      ? JSON.parse(localStorage.getItem("authTokens"))
+      ? JSON.parse(localStorage.getItem("authTokens") as string)
       : null
   );
 
 
   const [user, setUser] = useState(() =>
     localStorage.getItem("authTokens")
-      ? jwtDecode(localStorage.getItem("authTokens"))
+      ? jwtDecode(localStorage.getItem("authTokens") as string)
       : null
   );
 
@@ -26,7 +35,7 @@ export const AuthProvider = ({ children }) => {
 
   const navigate = useNavigate();
 
-  const loginUser = async (email, password) => {
+  const loginUser = async (email: string, password: string): Promise<void> => {
     const response = await fetch("http://127.0.0.1:8000/api/token/", {
       method: "POST",
       headers: {
@@ -70,7 +79,7 @@ export const AuthProvider = ({ children }) => {
     }
   }
 
-  const registerUser = async (email, username, password, password2) => {
+  const registerUser = async (email: string, username: string, password: string, password2: string) => {
     const response = await fetch("http://127.0.0.1:8000/api/register/", {
       method: "POST",
       headers: {
@@ -81,7 +90,7 @@ export const AuthProvider = ({ children }) => {
       })
     })
     if (response.status === 201) {
-      history.push("/login")
+      navigate("/login")
       swal.fire({
         title: "Registration Successful, Login Now",
         icon: "success",
@@ -107,10 +116,10 @@ export const AuthProvider = ({ children }) => {
   }
 
   const logoutUser = () => {
-    setAuthTokens(null)
-    setUser(null)
-    localStorage.removeItem("authTokens")
-    history.push("/login")
+    setAuthTokens(null);
+    setUser(null);
+    localStorage.removeItem("authTokens");
+    navigate("/login");
     swal.fire({
       title: "YOu have been logged out...",
       icon: "success",
