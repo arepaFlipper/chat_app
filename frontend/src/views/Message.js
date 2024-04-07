@@ -4,6 +4,7 @@ import useAxios from "../utils/useAxios";
 import jwtDecode from "jwt-decode";
 import moment from "moment";
 import { Link } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 
 function Message() {
   // NOTE: Define base api url
@@ -19,18 +20,77 @@ function Message() {
   const { access } = JSON.parse(token);
   const decoded = jwtDecode(token);
   const user_id = decoded.user_id;
+  const history = useHistory();
+
+  const [newMessage, setNewMessage] = useState({ message: "" });
+  const [newSearch, setNewSearch] = useState({ username: "" });
+
+  const handleNewMessage = (event) => {
+    setNewMessage({
+      ...newMessage,
+      [event.target.name]: event.target.value
+    })
+  }
+
+  const SendMessage = () => {
+    const formData = new FormData();
+    formData.append("user", user_id);
+    formData.append("sender", user_id);
+    formData.append("receiver", 1);
+    formData.append("message", newMessage.message);
+    formData.append("is_read", false);
+
+    try {
+      axios.post(`${baseURL}/get-messages/`, formData).then((res) => {
+        console.log(res.data);
+        setNewMessage({ message: "" });
+        axios.get(`${baseURL}/get-messages/${user_id}/1/`).then((res) => {
+          setMessages(res.data);
+        }).catch((err) => { })
+        // window.location.reload();
+      }).catch((err) => {
+        console.log(err);
+      });
+
+    } catch (error) {
+      console.log(error);
+
+    }
+  }
 
   useEffect(() => {
-    const url = `${baseURL}/my-messages/${user_id}/`;
-    try {
-      axios.get(url)
-        .then((res) => {
-          setMessages(res.data);
-        }).catch((err) => {
-        })
-    } catch (error) {
+    let interval = setInterval(() => {
+      const url = `${baseURL}/my-messages/${user_id}/`;
+      try {
+        axios.get(url)
+          .then((res) => {
+            setMessages(res.data);
+          }).catch((err) => {
+          })
+      } catch (error) {
+      }
+    }, 1000);
+    return () => {
+      clearInterval(interval);
     }
   }, []);
+
+  const SearchUser = () => {
+    axios.get(`${baseURL}/search/${newSearch.username}/`).then((res) => {
+      history.push(`/search/${newSearch.username}/`);
+    }).catch((err) => {
+      if (err.response.status === 404) {
+        alert("User not found");
+      }
+    })
+  };
+
+  const handleSearchChange = (event) => {
+    setNewSearch({
+      ...newSearch,
+      [event.target.name]: event.target.value
+    });
+  };
 
   return (
     <main className="content" style={{ marginTop: "150px" }}>
@@ -41,12 +101,11 @@ function Message() {
             <div className="col-12 col-lg-5 col-xl-3 border-right">
               <div className="px-4 d-none d-md-block">
                 <div className="d-flex align-items-center">
-                  <div className="flex-grow-1">
-                    <input
-                      type="text"
-                      className="form-control my-3"
-                      placeholder="Search..."
-                    />
+                  <div className="flex-grow-1 d-flex">
+                    <input type="text" className="form-control my-3" placeholder="Search..." onChange={handleSearchChange} name="username" />
+                    <button onClick={SearchUser} className="ml-2">
+                      <i className="fas fa-search" style={{ border: "none", background: "none" }}></i>
+                    </button>
                   </div>
                 </div>
               </div>
@@ -183,8 +242,12 @@ function Message() {
                     type="text"
                     className="form-control"
                     placeholder="Type your message"
+                    name="message"
+                    value={newMessage.message}
+                    onChange={handleNewMessage}
+                    id="text-input"
                   />
-                  <button className="btn btn-primary">Send</button>
+                  <button className="btn btn-primary" onClick={SendMessage}>Send</button>
                 </div>
               </div>
             </div>
