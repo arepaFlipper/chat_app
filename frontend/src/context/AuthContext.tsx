@@ -1,6 +1,6 @@
 import { createContext, useState, useEffect } from "react";
 import { jwtDecode } from "jwt-decode";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import swal from "sweetalert2";
 
 const AuthContext = createContext();
@@ -24,7 +24,7 @@ export const AuthProvider = ({ children }) => {
 
   const [loading, setLoading] = useState(true);
 
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const loginUser = async (email, password) => {
     const response = await fetch("http://127.0.0.1:8000/api/token/", {
@@ -41,10 +41,10 @@ export const AuthProvider = ({ children }) => {
 
     if (response.status === 200) {
       console.log("Logged In");
-      setAuthTokens(data)
-      setUser(jwt_decode(data.access))
-      localStorage.setItem("authTokens", JSON.stringify(data))
-      history.push("/")
+      setAuthTokens(data);
+      setUser(jwtDecode(data.access));
+      localStorage.setItem("authTokens", JSON.stringify(data));
+      navigate("/");
       swal.fire({
         title: "Login Successful",
         icon: "success",

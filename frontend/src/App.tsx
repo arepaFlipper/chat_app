@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom"
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom"
 import PrivateRoute from "./utils/PrivateRoute"
 import { AuthProvider } from './context/AuthContext'
 
@@ -17,16 +17,16 @@ function App() {
     <Router>
       <AuthProvider>
         < Navbar />
-        <Switch>
-          <PrivateRoute component={Dashboard} path="/dashboard" exact />
-          <PrivateRoute component={Message} path="/inbox" exact />
-          <PrivateRoute component={MessageDetail} path="/inbox/:id" exact />
-          <PrivateRoute component={SearchUsers} path="/search/:username" exact />
-          <Route component={Loginpage} path="/login" />
-          <Route component={Registerpage} path="/register" exact />
-          <Route component={Homepage} path="/" exact />
-          <Route component={Todo} path="/todo" exact />
-        </Switch>
+        <Routes>
+          {/* <PrivateRoute element={<Dashboard />} path="/dashboard" /> */}
+          {/* <PrivateRoute element={<Message />} path="/inbox" /> */}
+          {/* <PrivateRoute element={<MessageDetail />} path="/inbox/:id" /> */}
+          {/* <PrivateRoute element={<SearchUsers />} path="/search/:username" /> */}
+          <Route element={<Loginpage />} path="/login" />
+          <Route element={<Registerpage />} path="/register" />
+          <Route element={<Homepage />} path="/" />
+          <Route element={<Todo />} path="/todo" />
+        </Routes>
       </AuthProvider>
     </Router>
   )
