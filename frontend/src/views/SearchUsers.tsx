@@ -1,6 +1,6 @@
 import './style/Message.css';
 import { useState, useEffect } from 'react';
-import useAxios from '../utils/useAxios';
+import useAxios from '@/utils/useAxios';
 import { Link, useParams, useNavigate } from 'react-router-dom/';
 import swal, { SweetAlertPosition } from "sweetalert2";
 import type { TProfile } from '@/types';

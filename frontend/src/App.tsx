@@ -1,16 +1,16 @@
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom"
-import PrivateRoute from "./utils/PrivateRoute"
-import { AuthProvider } from './context/AuthContext'
+import PrivateRoute from "@/utils/PrivateRoute"
+import { AuthProvider } from '@/context/AuthContext'
 
-import Homepage from './views/Homepage'
-import Registerpage from './views/Registerpage'
-import Loginpage from './views/Loginpage'
-import Dashboard from './views/Dashboard'
-import Navbar from './views/Navbar'
-import Todo from './views/Todo'
-import Message from './views/Message'
-import MessageDetail from './views/MessageDetail'
-import SearchUsers from './views/SearchUsers'
+import Homepage from '@/views/Homepage'
+import Registerpage from '@/views/Registerpage'
+import Loginpage from '@/views/Loginpage'
+import Dashboard from '@/views/Dashboard'
+import Navbar from '@/views/Navbar'
+import Todo from '@/views/Todo'
+import Message from '@/views/Message'
+import MessageDetail from '@/views/MessageDetail'
+import SearchUsers from '@/views/SearchUsers'
 
 const App = () => {
   return (

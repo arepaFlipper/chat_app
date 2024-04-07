@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import "./style/Message.css";
-import useAxios from "../utils/useAxios";
+import "@/views/style/Message.css";
+import useAxios from "@/utils/useAxios";
 import { jwtDecode } from "jwt-decode";
 import moment from "moment";
 import { Link } from "react-router-dom";
