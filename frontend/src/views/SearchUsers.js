@@ -18,7 +18,6 @@ function SearchUsers() {
   const { username } = useParams();
 
   useEffect(() => {
-    if (newSearch.username === "") return;
     axios.get(`${baseURL}/search/${newSearch.username}/`)
       .then((res) => {
         setUsers(res.data)

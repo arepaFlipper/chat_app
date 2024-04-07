@@ -47,11 +47,11 @@ function MessageDetail() {
       } catch (error) {
 
       }
-    }, 9999);
+    }, 1000);
     return () => {
       clearInterval(interval);
     }
-  }, []);
+  }, [history, id]);
 
   // NOTE: Capture changes made by the user in those fields and update the component's state accordingly
   const handleNewMessage = (event) => {
