@@ -7,7 +7,10 @@ const Homepage = () => {
           {/* Main jumbotron for a primary marketing message or call to action */}
           <div className="jumbotron">
             <div className="container">
-              <h1 className="display-3">Hello, world!</h1>
+              <h1 className="display-3">Welcome to Chat Demo for TeleSign</h1>
+              <p>
+                The <a href="https://github.com/arepaflipper/chat_app">Source Code</a>
+              </p>
               <p>
                 This is a template for a simple marketing or informational website. It
                 includes a large callout called a jumbotron and three supporting
