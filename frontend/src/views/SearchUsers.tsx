@@ -7,7 +7,7 @@ import type { TProfile } from '@/types';
 
 const SearchUsers = () => {
 
-  const baseURL = 'http://127.0.0.1:8000/api';
+  const BASE_URL = import.meta.env.BASE_URL;
   const axios = useAxios();
   const navigate = useNavigate();
   const [users, setUsers] = useState([]);
@@ -18,7 +18,7 @@ const SearchUsers = () => {
   const { username } = useParams();
 
   useEffect(() => {
-    axios.get(`${baseURL}/search/${newSearch.username}/`)
+    axios.get(`${BASE_URL}/search/${newSearch.username}/`)
       .then((res) => {
         setUsers(res.data)
       })
@@ -48,7 +48,7 @@ const SearchUsers = () => {
 
   const SearchUser = () => {
     if (newSearch.username === "") return;
-    axios.get(`${baseURL}/search/${newSearch.username}/`)
+    axios.get(`${BASE_URL}/search/${newSearch.username}/`)
       .then((res) => {
         navigate(`/search/${newSearch.username}/`);
         setUsers(res.data)

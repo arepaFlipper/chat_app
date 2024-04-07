@@ -9,7 +9,7 @@ import type { TMessage } from "@/types";
 
 const Message = () => {
   // NOTE: Define base api url
-  const baseURL = "http://127.0.0.1:8000/api";
+  const BASE_URL = import.meta.env.BASE_URL;
 
   // NOTE: create new states
   const [messages, setMessages] = useState([]);
@@ -41,10 +41,10 @@ const Message = () => {
     formData.append("is_read", false as unknown as string);
 
     try {
-      axios.post(`${baseURL}/get-messages/`, formData).then((res) => {
+      axios.post(`${BASE_URL}/get-messages/`, formData).then((res) => {
         console.log(res.data);
         setNewMessage({ message: "" });
-        axios.get(`${baseURL}/get-messages/${user_id}/1/`).then((res) => {
+        axios.get(`${BASE_URL}/get-messages/${user_id}/1/`).then((res) => {
           setMessages(res.data);
         }).catch((err) => {
           console.log(err);
@@ -63,7 +63,7 @@ const Message = () => {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      const url = `${baseURL}/my-messages/${user_id}/`;
+      const url = `${BASE_URL}/my-messages/${user_id}/`;
       try {
         axios.get(url)
           .then((res) => {
@@ -80,7 +80,7 @@ const Message = () => {
   }, []);
 
   const SearchUser = () => {
-    axios.get(`${baseURL}/search/${newSearch.username}/`).then((res) => {
+    axios.get(`${BASE_URL}/search/${newSearch.username}/`).then((res) => {
       navigate(`/search/${newSearch.username}/`);
     }).catch((err) => {
       if (err.response.status === 404) {
