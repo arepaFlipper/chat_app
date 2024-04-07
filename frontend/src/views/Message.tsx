@@ -5,8 +5,9 @@ import { jwtDecode } from "jwt-decode";
 import moment from "moment";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import type { TMessage } from "@/types";
 
-function Message() {
+const Message = () => {
   // NOTE: Define base api url
   const baseURL = "http://127.0.0.1:8000/api";
 
@@ -17,15 +18,14 @@ function Message() {
 
   // NOTE: get token
   const token = localStorage.getItem("authTokens");
-  const { access } = JSON.parse(token);
-  const decoded = jwtDecode(token);
+  const decoded: { user_id: number } = jwtDecode(token as string);
   const user_id = decoded.user_id;
   const navigate = useNavigate();
 
   const [newMessage, setNewMessage] = useState({ message: "" });
   const [newSearch, setNewSearch] = useState({ username: "" });
 
-  const handleNewMessage = (event) => {
+  const handleNewMessage = (event: React.ChangeEvent<HTMLInputElement>) => {
     setNewMessage({
       ...newMessage,
       [event.target.name]: event.target.value
@@ -34,11 +34,11 @@ function Message() {
 
   const SendMessage = () => {
     const formData = new FormData();
-    formData.append("user", user_id);
-    formData.append("sender", user_id);
-    formData.append("receiver", 1);
-    formData.append("message", newMessage.message);
-    formData.append("is_read", false);
+    formData.append("user", user_id as unknown as string);
+    formData.append("sender", user_id as unknown as string);
+    formData.append("receiver", 1 as unknown as string);
+    formData.append("message", newMessage.message as unknown as string);
+    formData.append("is_read", false as unknown as string);
 
     try {
       axios.post(`${baseURL}/get-messages/`, formData).then((res) => {
@@ -46,7 +46,10 @@ function Message() {
         setNewMessage({ message: "" });
         axios.get(`${baseURL}/get-messages/${user_id}/1/`).then((res) => {
           setMessages(res.data);
-        }).catch((err) => { })
+        }).catch((err) => {
+          console.log(err);
+        });
+
         // window.location.reload();
       }).catch((err) => {
         console.log(err);
@@ -64,7 +67,7 @@ function Message() {
       try {
         axios.get(url)
           .then((res) => {
-            const sortedMessages = res.data.sort((a, b) => new Date(a.date) - new Date(b.date));
+            const sortedMessages = res.data.sort((a: { date: string }, b: { date: string }) => new Date(a.date).getTime() - new Date(b.date).getTime());
             setMessages(sortedMessages);
           }).catch((err) => {
           })
@@ -86,7 +89,7 @@ function Message() {
     })
   };
 
-  const handleSearchChange = (event) => {
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setNewSearch({
       ...newSearch,
       [event.target.name]: event.target.value
@@ -111,24 +114,24 @@ function Message() {
                 </div>
               </div>
 
-              {messages.map((message, idx) => {
+              {messages.map((msg: TMessage, idx) => {
                 return (
-                  <Link to={`/inbox/${message.sender}`} key={idx} href="#" className="list-group-item list-group-item-action border-0" >
+                  <Link to={`/inbox/${msg.sender}`} key={idx} className="list-group-item list-group-item-action border-0" >
                     <div className="badge bg-success float-right text-white">
-                      {moment.utc(message.date).local().startOf('seconds').fromNow()}
+                      {moment.utc(msg.date).local().startOf('seconds').fromNow()}
                     </div>
                     <div className="d-flex align-items-start">
-                      {message.sender.id !== user_id && (
-                        <img src={message.receiver_profile.image} style={{ objectFit: "cover" }} className="rounded-circle mr-1" alt={message.sender_profile.full_name} width={40} height={40} />
+                      {msg.sender !== user_id && (
+                        <img src={msg.receiver_profile.image} style={{ objectFit: "cover" }} className="rounded-circle mr-1" alt={msg.sender_profile.full_name} width={40} height={40} />
                       )}
-                      {message.sender.id === user_id && (
-                        <img src={message.sender_profile.image} className="rounded-circle mr-1" alt="Sharon Lessman" width={40} height={40} />
+                      {msg.sender === user_id && (
+                        <img src={msg.sender_profile.image} className="rounded-circle mr-1" alt="Sharon Lessman" width={40} height={40} />
                       )}
                       <div className="flex-grow-1 ml-3">
-                        {(message.sender.id !== user_id) && (<h6 className="mb-1">{message.receiver_profile.username}</h6>)}
-                        {(message.sender.id === user_id) && (<h6 className="mb-1">{message.sender_profile.username}</h6>)}
+                        {(msg.sender !== user_id) && (<h6 className="mb-1">{msg.receiver_profile.username}</h6>)}
+                        {(msg.sender === user_id) && (<h6 className="mb-1">{msg.sender_profile.username}</h6>)}
                         <div className="small">
-                          <span className="fas fa-circle chat-online" /> {message.message}
+                          <span className="fas fa-circle chat-online" /> {msg.message}
                         </div>
                       </div>
                     </div>
@@ -213,7 +216,7 @@ function Message() {
               </div>
               <div className="position-relative">
                 <div className="chat-messages p-4">
-                  {messages.map((msg, idx) => {
+                  {messages.map((msg: TMessage, idx) => {
                     return (
                       <div key={idx} className="chat-message-right pb-4">
                         <div>
@@ -225,7 +228,7 @@ function Message() {
                             height={40}
                           />
                           <div className="text-muted small text-wrap mt-2">
-                            {moment.utc(msg.created_at).local().startOf("seconds").fromNow()}
+                            {moment.utc(msg.date).local().startOf("seconds").fromNow()}
                           </div>
                         </div>
                         <div className="flex-shrink-1 bg-light rounded py-2 px-3 mr-3">
