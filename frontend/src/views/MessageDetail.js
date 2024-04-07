@@ -3,7 +3,8 @@ import "./style/Message.css";
 import useAxios from "../utils/useAxios";
 import jwtDecode from "jwt-decode";
 import moment from "moment";
-import { useParams, Link } from "react-router-dom"
+import { useParams, Link } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 
 function MessageDetail() {
   const baseURL = "http://127.0.0.1:8000/api";
@@ -11,6 +12,7 @@ function MessageDetail() {
   const [messages, setMessages] = useState([]);
 
   const [newMessage, setNewMessage] = useState({ message: "" });
+  const [newSearch, setNewSearch] = useState({ username: "" });
 
   const { id } = useParams();
   const token = localStorage.getItem("authTokens");
@@ -18,6 +20,8 @@ function MessageDetail() {
   const user_id = decoded.user_id;
 
   const axios = useAxios();
+
+  const history = useHistory();
 
   useEffect(() => {
     const url = `${baseURL}/my-messages/${user_id}/`;
@@ -43,7 +47,7 @@ function MessageDetail() {
       } catch (error) {
 
       }
-    }, 99999);
+    }, 9999);
     return () => {
       clearInterval(interval);
     }
@@ -83,6 +87,23 @@ function MessageDetail() {
     }
   }
 
+  const handleSearchChange = (event) => {
+    setNewSearch({
+      ...newSearch,
+      [event.target.name]: event.target.value
+    });
+  }
+
+
+  const SearchUser = () => {
+    axios.get(`${baseURL}/search/${newSearch.username}/`).then((res) => {
+      history.push(`/search/${newSearch.username}/`);
+    }).catch((err) => {
+      if (err.response.status === 404) {
+        alert("User not found");
+      }
+    })
+  }
 
   return (
     <main className="content" style={{ marginTop: "150px" }}>
@@ -92,35 +113,34 @@ function MessageDetail() {
           <div className="row g-0">
             <div className="col-12 col-lg-5 col-xl-3 border-right">
               <div className="px-4 d-none d-md-block">
-                <div className="d-flex align-items-center">
-                  <div className="flex-grow-1">
-                    <input
-                      type="text"
-                      className="form-control my-3"
-                      placeholder="Search..."
-                    />
+                <div className=" align-items-center">
+                  <div className="flex-grow-1 d-flex">
+                    <input type="text" className="form-control my-3" placeholder="Search..." onChange={handleSearchChange} name="username" />
+                    <button onClick={SearchUser} className="ml-2">
+                      <i className="fas fa-search" style={{ border: "none", background: "none" }}></i>
+                    </button>
                   </div>
                 </div>
               </div>
 
-              {messages.map((message, idx) => {
+              {messages.map((msg, idx) => {
                 return (
-                  <Link to={`/inbox/${(message.sender === user_id ? message.receiver : message.sender)}`} key={idx} href="#" className="list-group-item list-group-item-action border-0" >
+                  <Link to={`/inbox/${(msg.sender === user_id ? msg.receiver : msg.sender)}`} key={idx} href="#" className="list-group-item list-group-item-action border-0" >
                     <div className="badge bg-success float-right text-white">
-                      {moment.utc(message.date).local().startOf('seconds').fromNow()}
+                      {moment.utc(msg.date).local().startOf('seconds').fromNow()}
                     </div>
                     <div className="d-flex align-items-start">
-                      {message.sender.id !== user_id && (
-                        <img src={message.receiver_profile.image} style={{ objectFit: "cover" }} className="rounded-circle mr-1" alt={message.sender_profile.full_name} width={40} height={40} />
+                      {msg.sender.id !== user_id && (
+                        <img src={msg.receiver_profile.image} style={{ objectFit: "cover" }} className="rounded-circle mr-1" alt={msg.sender_profile.full_name} width={40} height={40} />
                       )}
-                      {message.sender.id === user_id && (
-                        <img src={message.sender_profile.image} className="rounded-circle mr-1" alt="Sharon Lessman" width={40} height={40} />
+                      {msg.sender.id === user_id && (
+                        <img src={msg.sender_profile.image} className="rounded-circle mr-1" alt="Sharon Lessman" width={40} height={40} />
                       )}
                       <div className="flex-grow-1 ml-3">
-                        {(message.sender.id !== user_id) && (<h6 className="mb-1">{message.receiver_profile.username}</h6>)}
-                        {(message.sender.id === user_id) && (<h6 className="mb-1">{message.sender_profile.username}</h6>)}
+                        {(msg.sender.id !== user_id) && (<h6 className="mb-1">{msg.receiver_profile.username}</h6>)}
+                        {(msg.sender.id === user_id) && (<h6 className="mb-1">{msg.sender_profile.username}</h6>)}
                         <div className="small">
-                          <span className="fas fa-circle chat-online" /> {message.message}
+                          <span className="fas fa-circle chat-online" /> {msg.message}
                         </div>
                       </div>
                     </div>
