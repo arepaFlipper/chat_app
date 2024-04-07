@@ -3,13 +3,13 @@ import { jwtDecode } from "jwt-decode"
 import AuthContext from '../context/AuthContext'
 import { Link } from 'react-router-dom'
 
-function Navbar() {
+const Navbar = () => {
 
   const { user, logoutUser } = useContext(AuthContext)
   const token = localStorage.getItem("authTokens")
 
   if (token) {
-    const decoded = jwtDecode(token)
+    const decoded: { user_id: number } = jwtDecode(token)
     const user_id = decoded.user_id
   }
 

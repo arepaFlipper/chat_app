@@ -7,7 +7,7 @@ import { useParams, Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import type { TMessage, TProfile } from "@/types";
 
-function MessageDetail() {
+const MessageDetail = () => {
   const baseURL = "http://127.0.0.1:8000/api";
   const [message, setMessage] = useState([]);
   const [messages, setMessages] = useState([]);
