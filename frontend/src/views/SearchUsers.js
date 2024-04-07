@@ -1,61 +1,74 @@
-import React, { useState, useEffect } from 'react';
-import "./style/Message.css";
-import useAxios from "../utils/useAxios";
-import jwtDecode from "jwt-decode";
-import moment from "moment";
-import { Link } from "react-router-dom";
-import { useHistory } from "react-router-dom";
-import { useParams } from "react-router-dom";
-import Swal from 'sweetalert2'
-
+import React from 'react';
+import './style/Message.css';
+import { useState, useEffect } from 'react';
+import useAxios from '../utils/useAxios';
+import { Link, useParams, useHistory } from 'react-router-dom/';
+const swal = require('sweetalert2');
 
 function SearchUsers() {
-  const baseURL = "http://127.0.0.1:8000/api";
-  let [newSearch, setNewSearch] = useState({ search: "" });
+
+  const baseURL = 'http://127.0.0.1:8000/api';
+  const axios = useAxios();
+  const history = useHistory();
   const [users, setUsers] = useState([]);
+  const [profiles, setProfile] = useState([]);
+  let [newSearch, setnewSearch] = useState({ username: "", });
+  const [loading, setLoading] = useState(true);
 
   const { username } = useParams();
-  const token = localStorage.getItem("authTokens");
-  const decoded = jwtDecode(token);
-  const user_id = decoded.user_id;
-
-  const axios = useAxios();
-
-  const history = useHistory();
-
-  const handleSearchChange = (e) => {
-
-  }
 
   useEffect(() => {
-    axios.get(`${baseURL}/search/${username}/`).then((res) => {
-      setUsers(res.data);
-    }).catch((err) => {
-      Swal.fire({
-        title: "User does not exist",
-        icon: "error",
-        toast: true,
-        timer: 2000,
-        position: "middle",
+    if (newSearch.username === "") return;
+    axios.get(`${baseURL}/search/${newSearch.username}/`)
+      .then((res) => {
+        setUsers(res.data)
       })
+      .catch((error) => {
+        swal.fire({
+          title: "User Does Not Exist",
+          icon: "error",
+          toast: true,
+          timer: 2000,
+          position: 'middle',
+          timerProgressBar: true,
+          showConfirmButton: false,
+          showCancelButton: true,
+        })
+      });
+  }, [])
 
+  const handleSearchChange = (event) => {
+    setnewSearch({
+      ...newSearch,
+      [event.target.name]: event.target.value,
     });
-  }, []);
+
+  };
+
+
 
   const SearchUser = () => {
-    try {
-      axios.get(`${baseURL}/search/${newSearch.username}/`).then((res) => {
+    if (newSearch.username === "") return;
+    axios.get(`${baseURL}/search/${newSearch.username}/`)
+      .then((res) => {
         history.push(`/search/${newSearch.username}/`);
-        setUsers(res.data);
-      }).catch((err) => {
-        if (err.response.status === 404) {
-          alert("User not found");
-        }
-      })
-    } catch (err) {
+        setUsers(res.data)
 
-    }
-  }
+      })
+      .catch((error) => {
+        swal.fire({
+          title: "User Does Not Exist",
+          icon: "error",
+          toast: true,
+          timer: 2000,
+          position: 'middle',
+          timerProgressBar: true,
+          showConfirmButton: false,
+          showCancelButton: true,
+        })
+      });
+  };
+
 
   return (
     <div>
@@ -77,7 +90,7 @@ function SearchUsers() {
                           name='username'
 
                         />
-                        <button className='ml-2' style={{ border: "none", borderRadius: "50%" }}><i className='fas fa-search'></i></button>
+                        <button className='ml-2' onClick={SearchUser} style={{ border: "none", borderRadius: "50%" }}><i className='fas fa-search'></i></button>
                       </div>
                     </div>
                   </div>
@@ -94,7 +107,7 @@ function SearchUsers() {
                         <img src={user.image} className="rounded-circle mr-1" alt="1" width={40} height={40} />
 
                         <div className="flex-grow-1 ml-3">
-                          {user.full_name}
+                          {user.username}
 
                           <div className="small">
                             <small><i className='fas fa-envelope'> Send Message</i></small>
@@ -113,7 +126,7 @@ function SearchUsers() {
         </main>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default SearchUsers;
+export default SearchUsers
