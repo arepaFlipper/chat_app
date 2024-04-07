@@ -12,7 +12,7 @@ import Message from './views/Message'
 import MessageDetail from './views/MessageDetail'
 import SearchUsers from './views/SearchUsers'
 
-function App() {
+const App = () => {
   return (
     <Router>
       <AuthProvider>

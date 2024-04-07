@@ -5,7 +5,8 @@ import AuthContext from "../context/AuthContext"
 
 type Props = {
   children: React.ReactNode;
-  isAuthenticated: boolean;
+  isAuthenticated?: boolean;
+  path: string;
 }
 
 const PrivateRoute = ({ children, path }: Props) => {
