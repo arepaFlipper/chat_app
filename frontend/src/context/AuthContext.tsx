@@ -36,7 +36,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const navigate = useNavigate();
 
   const loginUser = async (email: string, password: string): Promise<void> => {
-    const response = await fetch("http://127.0.0.1:8000/api/token/", {
+    const response = await fetch(`${import.meta.env.API_URL}/api/login/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -80,7 +80,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   }
 
   const registerUser = async (email: string, username: string, password: string, password2: string) => {
-    const response = await fetch("http://127.0.0.1:8000/api/register/", {
+    const response = await fetch(`${import.meta.env.API_URL}/api/register/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
