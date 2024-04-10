@@ -9,6 +9,7 @@ class User(AbstractUser):
     """
     username = models.CharField(max_length=100)
     email = models.EmailField(unique=True)
+    phone_number = models.CharField(max_length=12)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username']
@@ -103,3 +104,21 @@ class ChatMessage(models.Model):
         receiver_profile = Profile.objects.get(user=self.sender)
         return receiver_profile
 
+class VerificationCode(models.Model):
+    number = models.CharField(max_length=5, blank= True)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return str(self.number)
+
+    def save(self, *args, **kwargs):
+        number_list = [x for x in range(10)]
+        code_items = []
+
+        for _ in range(5):
+            digit = random.choice(number_list)
+            code_items.append(digit)
+
+        code_string = "".join(str(item) for item in code_items)
+        self.number = code_string
+        super().save(*args, **kwargs)
