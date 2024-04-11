@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import swal from "sweetalert2";
 import type { AuthContextType } from "@/types";
 
+const API_URL = (import.meta.env.PROD && false) ? "http://telesigndem.com" : "http://localhost:8000";
 const AuthContext = createContext<AuthContextType>({
   user: null,
   setUser: () => { },
@@ -36,7 +37,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const navigate = useNavigate();
 
   const loginUser = async (email: string, password: string): Promise<void> => {
-    const response = await fetch(`${import.meta.env.API_URL}/api/login/`, {
+    const response = await fetch(`${API_URL}/api/login/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -79,8 +80,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
   }
 
-  const registerUser = async (email: string, username: string, password: string, password2: string) => {
-    const response = await fetch(`${import.meta.env.API_URL}/api/register/`, {
+  const verification = async (username: string, code_verification: string) => {
+    const response = await fetch(`${API_URL}/api/verify/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
