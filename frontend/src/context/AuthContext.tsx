@@ -5,6 +5,7 @@ import swal from "sweetalert2";
 import type { AuthContextType } from "@/types";
 
 const API_URL = (import.meta.env.PROD && false) ? "http://telesigndem.com" : "http://localhost:8000";
+
 const AuthContext = createContext<AuthContextType>({
   user: null,
   setUser: () => { },
@@ -87,13 +88,50 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        email, username, password, password2
+        username,
+        code: code_verification
       })
     })
     if (response.status === 201) {
       navigate("/login")
       swal.fire({
         title: "Registration Successful, Login Now",
+        icon: "success",
+        toast: true,
+        timer: 6000,
+        position: 'top-right',
+        timerProgressBar: true,
+        showConfirmButton: false,
+      })
+    } else {
+      console.log(response.status);
+      console.log("there was a server issue");
+      swal.fire({
+        title: "An Error Occured " + response.status,
+        icon: "error",
+        toast: true,
+        timer: 6000,
+        position: 'top-right',
+        timerProgressBar: true,
+        showConfirmButton: false,
+      })
+    }
+  }
+
+  const registerUser = async (email: string, username: string, password: string, password2: string) => {
+    const response = await fetch(`${API_URL}/api/register/`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        email, username, password, password2
+      })
+    })
+    if (response.status === 201) {
+      navigate(`/verification/${username}`)
+      swal.fire({
+        title: "Please check your email for verification code",
         icon: "success",
         toast: true,
         timer: 6000,
@@ -140,6 +178,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     registerUser,
     loginUser,
     logoutUser,
+    verification,
   }
 
   useEffect(() => {

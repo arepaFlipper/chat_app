@@ -5,6 +5,7 @@ import { AuthProvider } from '@/context/AuthContext'
 import Homepage from '@/views/Homepage'
 import Registerpage from '@/views/Registerpage'
 import Loginpage from '@/views/Loginpage'
+import UserVerification from '@/views/UserVerification'
 import Dashboard from '@/views/Dashboard'
 import Navbar from '@/views/Navbar'
 import Todo from '@/views/Todo'
@@ -23,6 +24,7 @@ const App = () => {
           <Route element={<PrivateRoute children={<MessageDetail />} path="/inbox/:id" />} path="/inbox/:id" />
           <Route element={<PrivateRoute children={<SearchUsers />} path="/search/:username" />} path="/search/:username" />
           <Route element={<Loginpage />} path="/login" />
+          <Route element={<UserVerification />} path="/verification/:username" />
           <Route element={<Registerpage />} path="/register" />
           <Route element={<Homepage />} path="/" />
           <Route element={<Todo />} path="/todo" />

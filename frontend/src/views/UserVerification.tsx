@@ -1,21 +1,20 @@
 import { useContext } from 'react';
-import { Link } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import AuthContext from '@/context/AuthContext';
 
-const Loginpage = () => {
+const UserVerification = () => {
   // Get the loginUser function from AuthContext
-  const { loginUser } = useContext<any>(AuthContext);
+  const { Verification } = useContext<any>(AuthContext);
+  const { username } = useParams();
 
   // Handle form submission
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const form_data = new FormData(e.currentTarget);
-    const email: string = form_data.get("email") as string;
-    const password: string = form_data.get("password") as string;
+    const verification_code: string = form_data.get("email") as string;
 
     // Call loginUser function with email and password
-    email.length > 0 && loginUser(email, password);
-
+    Verification(username, verification_code);
   }
 
   return (
@@ -49,28 +48,17 @@ const Loginpage = () => {
                             className="fw-normal mb-3 pb-3"
                             style={{ letterSpacing: 1 }}
                           >
-                            Sign into your account
+                            Please verify your account with the code sent to your email
                           </h5>
                           <div className="form-outline mb-4">
                             <input
-                              type="email"
-                              id="form2Example17"
+                              type="number"
+                              id="verification_code"
                               className="form-control form-control-lg"
-                              name='email'
+                              name='verification_code'
                             />
-                            <label className="form-label" htmlFor="form2Example17">
-                              Email address
-                            </label>
-                          </div>
-                          <div className="form-outline mb-4">
-                            <input
-                              type="password"
-                              id="form2Example27"
-                              className="form-control form-control-lg"
-                              name='password'
-                            />
-                            <label className="form-label" htmlFor="form2Example27">
-                              Password
+                            <label className="form-label" htmlFor="verification_code">
+                              Verification code
                             </label>
                           </div>
                           <div className="pt-1 mb-4">
@@ -78,24 +66,9 @@ const Loginpage = () => {
                               className="btn btn-dark btn-lg btn-block"
                               type="submit"
                             >
-                              Login
+                              Verify
                             </button>
                           </div>
-                          <a className="small text-muted" href="#!">
-                            Forgot password?
-                          </a>
-                          <p className="mb-5 pb-lg-2" style={{ color: "#393f81" }}>
-                            Don't have an account?{" "}
-                            <Link to="/register" style={{ color: "#393f81" }}>
-                              Register Now
-                            </Link>
-                          </p>
-                          <a href="#!" className="small text-muted">
-                            Terms of use.
-                          </a>
-                          <a href="#!" className="small text-muted">
-                            Privacy policy
-                          </a>
                         </form>
                       </div>
                     </div>
@@ -115,4 +88,4 @@ const Loginpage = () => {
   )
 }
 
-export default Loginpage;
+export default UserVerification;
