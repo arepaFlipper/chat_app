@@ -198,6 +198,8 @@ class SearchUser(generics.ListAPIView):
         serializer = self.get_serializer(users, many=True)
         return Response(serializer.data)
 
+@api_view(['GET', 'POST'])
+@permission_classes([AllowAny])
 def verify(request):
     primary_key = request.session.get('primary_key')
     form = request.POST
