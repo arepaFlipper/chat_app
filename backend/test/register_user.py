@@ -12,6 +12,7 @@ data = {
     "password": "random_pass",
     "password2": "random_pass",
     "username": "root",
+    "phone_number": "",
 }
 # Generate a random boundary string
 boundary = "----WebKitFormBoundaryexampleboundary"
