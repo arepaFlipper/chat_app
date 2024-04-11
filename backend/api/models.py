@@ -1,6 +1,7 @@
 from django.db import models
 from django.db.models.signals import post_save
 from django.contrib.auth.models import AbstractUser
+import random
 
 
 class User(AbstractUser):
@@ -20,6 +21,7 @@ class User(AbstractUser):
         Get the profile of the user.
         """
         profile = Profile.objects.get(user=self)
+        verification_code = VerificationCode.objects.get(user=self)
 
 class Profile(models.Model):
     """

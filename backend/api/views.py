@@ -158,6 +158,16 @@ class ProfileDetail(generics.RetrieveUpdateAPIView):
     queryset = Profile.objects.all()
     permission_classes = [IsAuthenticated]
 
+class VerifyProfile(generics.GenericAPIView):
+    """
+    View for verifying a user's profile.
+    """
+    def post(self, request):
+        user = request.user
+        user.profile.save()
+        return Response({"details": "Profile verified successfully"}, status=status.HTTP_200_OK)
+
+
 class SearchUser(generics.ListAPIView):
     """
     View for searching users by username, full name, or email.
@@ -187,3 +197,26 @@ class SearchUser(generics.ListAPIView):
         # Serialize and return the users
         serializer = self.get_serializer(users, many=True)
         return Response(serializer.data)
+
+def verify(request):
+    primary_key = request.session.get('primary_key')
+    form = request.POST
+    if primary_key:
+        profile = Profile.objects.get(user_id=primary_key)
+        user = User.objects.get(id=primary_key)
+        username = user.username
+        verification_code = profile.user.verification_code
+        code_user = f"{username}: {verification_code}"
+        if not request.POST:
+            # send sms
+            pass
+
+        if form.is_valid():
+            number = form.cleaned_data['number']
+
+            if str(verification_code) == num:
+                verification_code.save()
+                return redirect('home')
+            else:
+                return redirect()
+        return render(request, 'verify.html', {'form': form})

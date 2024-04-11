@@ -21,7 +21,7 @@ class ProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Profile
-        fields = ["id", "user", "full_name", "image", "username" ]
+        fields = ["id", "user", "full_name", "image", "username", "verified" ]
 
     def get_username(self, obj):
         return obj.user
@@ -50,7 +50,10 @@ class RegisterSerializer(serializers.ModelSerializer):
     Serializer for user registration.
     """
     password = serializers.CharField(
-        write_only=True, required=True, validators=[validate_password])
+        write_only=True, 
+        required=True, 
+        validators=[validate_password]
+    )
     password2 = serializers.CharField(write_only=True, required=True)
 
     class Meta:
@@ -72,9 +75,11 @@ class RegisterSerializer(serializers.ModelSerializer):
 
         user.set_password(validated_data['password'])
         user.save()
+        verification_code = user.verificationcode.number
+        # TODO: send sms
 
         return user
-    
+
 class TodoSerializer(serializers.ModelSerializer):
     """
     Serializer for the Todo model.
