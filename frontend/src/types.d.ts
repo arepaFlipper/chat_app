@@ -22,7 +22,7 @@ interface AuthContextType {
   setUser: React.Dispatch<React.SetStateAction<any>>;
   authTokens: any; // Define the type for authTokens object as per your requirement
   setAuthTokens: React.Dispatch<React.SetStateAction<any>>;
-  registerUser: (email: string, username: string, password: string, password2: string) => Promise<void>;
+  registerUser: (email: string, username: string, password: string, password2: string, phone: string) => Promise<void>;
   loginUser: (email: string, password: string) => Promise<void>;
   logoutUser: () => void;
 }

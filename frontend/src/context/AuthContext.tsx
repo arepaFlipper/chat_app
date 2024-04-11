@@ -118,14 +118,14 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
   }
 
-  const registerUser = async (email: string, username: string, password: string, password2: string) => {
+  const registerUser = async (email: string, username: string, password: string, password2: string, phone: string) => {
     const response = await fetch(`${API_URL}/api/register/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        email, username, password, password2
+        email, username, password, password2, phone_number: phone,
       })
     })
     if (response.status === 201) {

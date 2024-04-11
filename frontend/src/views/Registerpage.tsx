@@ -10,6 +10,7 @@ const Registerpage = () => {
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
   const [password2, setPassword2] = useState("")
+  const [phone, setPhone] = useState("")
 
   //NOTE: Accessing registerUser function from AuthContext
   const { registerUser } = useContext(AuthContext)
@@ -17,7 +18,7 @@ const Registerpage = () => {
   // NOTE: Function to handle form submission
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    registerUser(email, username, password, password2);
+    registerUser(email, username, password, password2, phone);
   }
 
 
@@ -96,6 +97,15 @@ const Registerpage = () => {
 
                             />
                           </div>
+                          <div className="form-outline mb-4">
+                            <input
+                              type="number"
+                              id="phone_number"
+                              className="form-control form-control-lg"
+                              placeholder="Phone Number"
+                              onChange={e => setPhone(e.target.value)}
+                            />
+                          </div>
                           <div className="pt-1 mb-4">
                             <button
                               className="btn btn-dark btn-lg btn-block"
@@ -129,17 +139,6 @@ const Registerpage = () => {
           </div>
         </section>
         <footer className="bg-light text-center text-lg-start">
-          {/* Copyright */}
-          <div
-            className="text-center p-3"
-            style={{ backgroundColor: "rgba(0, 0, 0, 0.2)" }}
-          >
-            © 2019 - till date Copyright:
-            <a className="text-dark" href="https://mdbootstrap.com/">
-              desphixs.com
-            </a>
-          </div>
-          {/* Copyright */}
         </footer>
       </>
 
