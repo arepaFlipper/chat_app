@@ -4,7 +4,7 @@ import AuthContext from '@/context/AuthContext';
 
 const UserVerification = () => {
   // Get the loginUser function from AuthContext
-  const { Verification } = useContext<any>(AuthContext);
+  const { verification } = useContext<any>(AuthContext);
   const { username } = useParams();
 
   // Handle form submission
@@ -14,7 +14,7 @@ const UserVerification = () => {
     const verification_code: string = form_data.get("email") as string;
 
     // Call loginUser function with email and password
-    Verification(username, verification_code);
+    verification(username, verification_code);
   }
 
   return (
@@ -58,7 +58,7 @@ const UserVerification = () => {
                               name='verification_code'
                             />
                             <label className="form-label" htmlFor="verification_code">
-                              Verification code
+                              verification code
                             </label>
                           </div>
                           <div className="pt-1 mb-4">

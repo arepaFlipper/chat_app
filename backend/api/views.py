@@ -198,6 +198,8 @@ class SearchUser(generics.ListAPIView):
         serializer = self.get_serializer(users, many=True)
         return Response(serializer.data)
 
+@api_view(['GET', 'POST'])
+@permission_classes([AllowAny])
 def verify(request):
     primary_key = request.session.get('primary_key')
     form = request.POST
@@ -215,8 +217,9 @@ def verify(request):
             number = form.cleaned_data['number']
 
             if str(verification_code) == num:
-                verification_code.save()
+                profile.verified = True
+                profile.save()
                 return redirect('home')
             else:
-                return redirect()
-        return render(request, 'verify.html', {'form': form})
+                return Response({'message': 'Wrong Code'}, status=status.HTTP_400_BAD_REQUEST)
+        return redirect('home')

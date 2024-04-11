@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import swal from "sweetalert2";
 import type { AuthContextType } from "@/types";
 
-const API_URL = (import.meta.env.PROD && false) ? "http://telesigndem.com" : "http://localhost:8000";
+const API_URL = (import.meta.env.PROD) ? "http://54.90.121.226:8000" : "http://localhost:8000";
 
 const AuthContext = createContext<AuthContextType>({
   user: null,
