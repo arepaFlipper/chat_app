@@ -19,3 +19,5 @@ django-taggit
 shortuuid
 django-jazzmin
 requests
+django-environ
+telesign

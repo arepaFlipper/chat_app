@@ -4,6 +4,7 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from .verify_with_own_code import send_sms
 
 class UserSerializer(serializers.ModelSerializer):
     """
@@ -77,6 +78,8 @@ class RegisterSerializer(serializers.ModelSerializer):
         user.save()
         verification_code = user.verificationcode.number
         # TODO: send sms
+        # response = send_sms(user.phone_number,verification_code)
+        response = send_sms(user.phone_number,verification_code)
 
         return user
 
