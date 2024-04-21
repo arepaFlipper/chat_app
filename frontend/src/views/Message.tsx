@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import "@/views/style/Message.css"; // Importing CSS file
+import "@/views/style/Message.css";
 import useAxios from "@/utils/useAxios";
 import { jwtDecode } from "jwt-decode";
 import moment from "moment";
@@ -8,15 +8,15 @@ import { useNavigate } from "react-router-dom";
 import type { TMessage } from "@/types";
 
 const Message = () => {
-  // Define base api url
-  const BASE_URL = import.meta.env.BASE_URL;
+  // NOTE: Define base api url
+  const BASE_URL = "http://127.0.0.1:8000/api";
 
-  // Create new states
+  // NOTE: create new states
   const [messages, setMessages] = useState([]);
 
   const axios = useAxios();
 
-  // Get token
+  // NOTE: get token
   const token = localStorage.getItem("authTokens");
   const decoded: { user_id: number } = jwtDecode(token as string);
   const user_id = decoded.user_id;
@@ -25,7 +25,6 @@ const Message = () => {
   const [newMessage, setNewMessage] = useState({ message: "" });
   const [newSearch, setNewSearch] = useState({ username: "" });
 
-  // Function to handle changes in new message input
   const handleNewMessage = (event: React.ChangeEvent<HTMLInputElement>) => {
     setNewMessage({
       ...newMessage,
@@ -33,7 +32,6 @@ const Message = () => {
     })
   }
 
-  // Function to send a new message
   const SendMessage = () => {
     const formData = new FormData();
     formData.append("user", user_id as unknown as string);
@@ -59,10 +57,10 @@ const Message = () => {
 
     } catch (error) {
       console.log(error);
+
     }
   }
 
-  // Fetch messages on component mount
   useEffect(() => {
     const interval = setInterval(() => {
       const url = `${BASE_URL}/my-messages/${user_id}/`;
@@ -81,7 +79,6 @@ const Message = () => {
     }
   }, []);
 
-  // Function to search for a user
   const SearchUser = () => {
     axios.get(`${BASE_URL}/search/${newSearch.username}/`).then((res) => {
       navigate(`/search/${newSearch.username}/`);
@@ -92,7 +89,6 @@ const Message = () => {
     })
   };
 
-  // Function to handle changes in the search input
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setNewSearch({
       ...newSearch,
